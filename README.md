@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# subeom.dev
+포트폴리오 & 기술블로그
 
-## Getting Started
+## 프로젝트 개요
 
-First, run the development server:
+Next.js 14, TypeScript, Tailwind CSS, Supabase를 사용한 개발자 포트폴리오 및 기술 블로그입니다.
+
+## 기술 스택
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui
+- **Database**: Supabase
+- **Architecture**: FSD (Feature-Sliced Design)
+- **Animation**: Framer Motion
+- **Content**: MDX (next-mdx-remote)
+
+## 시작하기
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 의존성 설치
+pnpm install
+
+# 개발 서버 실행
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 확인하세요.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 환경 변수 설정
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+`.env.local` 파일을 생성하고 다음 변수를 설정하세요:
 
-## Learn More
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 프로젝트 구조
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/              # Next.js App Router 페이지
+├── components/       # 공통 컴포넌트
+├── entities/         # 비즈니스 엔티티 (FSD)
+├── features/         # 기능 단위 (FSD)
+├── widgets/          # 위젯 블록 (FSD)
+├── shared/           # 공유 리소스 (FSD)
+└── type/             # 타입 정의
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 배포
 
-## Deploy on Vercel
+Vercel을 통해 배포할 수 있습니다:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/parksubeom/subeom.dev)
