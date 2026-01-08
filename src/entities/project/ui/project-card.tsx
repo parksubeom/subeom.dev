@@ -1,117 +1,102 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { cva, type VariantProps } from "class-variance-authority"
-import { motion } from "framer-motion"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card"
-import { Badge } from "@/shared/ui/badge"
-import { Project } from "../model/types"
-import { cn } from "@/shared/lib/utils"
+import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Github, ExternalLink, Folder } from "lucide-react";
+import { Badge } from "@/shared/ui/badge";
+import { Button } from "@/shared/ui/button";
+import { Card, CardContent, CardFooter } from "@/shared/ui/card";
+import type { Project } from "@/entities/project/model/types";
 
-const projectCardVariants = cva(
-  "h-full overflow-hidden transition-shadow group",
-  {
-    variants: {
-      variant: {
-        default: "hover:shadow-lg",
-        featured: "hover:shadow-xl border-2 border-primary/20",
-        compact: "hover:shadow-md",
-      },
-    },
-    defaultVariants: {
-      variant: "default",
-    },
-  }
-)
-
-export interface ProjectCardProps
-  extends VariantProps<typeof projectCardVariants> {
-  project: Project
-  className?: string
+interface ProjectCardProps {
+  project: Project;
 }
 
-export function ProjectCard({ project, variant, className }: ProjectCardProps) {
-  const techStack = project.tech_stack || []
-  const displayTechs = techStack.slice(0, 3)
-  const remainingCount = techStack.length - 3
-
+export function ProjectCard({ project }: ProjectCardProps) {
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.9 }}
-      transition={{ duration: 0.2 }}
-      className={className}
+      whileHover={{ y: -8 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <Link href={`/portfolio/${project.id}`}>
-        <Card className={cn(
-          projectCardVariants({ variant }),
-          "bg-card/50 backdrop-blur-sm border-border/50",
-          "hover:-translate-y-1 hover:border-primary/50 hover:shadow-xl",
-          "transition-all duration-300"
-        )}>
-          {project.thumbnail_url && (
-            <div className="relative h-48 w-full overflow-hidden rounded-t-lg">
-              <Image
-                src={project.thumbnail_url}
-                alt={project.title}
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
-              />
+      <Card className="group overflow-hidden border-border/50 bg-card/40 backdrop-blur-sm hover:shadow-xl hover:shadow-primary/10 transition-all duration-300 h-full flex flex-col">
+        {/* 썸네일 영역 */}
+        <div className="relative aspect-video w-full overflow-hidden bg-muted/50 border-b border-border/50">
+          {project.thumbnail_url ? (
+            <Image
+              src={project.thumbnail_url}
+              alt={project.title}
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center text-muted-foreground/30">
+              <Folder className="w-12 h-12" />
             </div>
           )}
-          <CardHeader>
-            <div className="flex items-start justify-between gap-2">
-              <CardTitle className="line-clamp-2 group-hover:text-primary transition-colors">
-                {project.title}
-              </CardTitle>
-              {project.category && (
-                <Badge variant="secondary" className="shrink-0">
-                  {project.category}
-                </Badge>
-              )}
+          
+          {/* 카테고리 배지 (값이 있을 때만 표시) */}
+          {project.category && (
+            <div className="absolute top-3 left-3">
+              <Badge variant="secondary" className="bg-background/80 backdrop-blur-md border-border/20 shadow-sm">
+                {project.category}
+              </Badge>
             </div>
-            {project.description && (
-              <CardDescription className="line-clamp-2 text-muted-foreground">
-                {project.description}
-              </CardDescription>
-            )}
-          </CardHeader>
-          <CardContent>
-            {techStack.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {displayTechs.map((tech, index) => (
-                  <Badge
-                    key={index}
-                    variant="outline"
-                    className="text-xs hover:bg-primary/10 transition-colors"
-                  >
-                    {tech}
-                  </Badge>
-                ))}
-                {remainingCount > 0 && (
-                  <Badge variant="outline" className="text-xs">
-                    +{remainingCount}
-                  </Badge>
-                )}
-              </div>
-            )}
-            {project.status && (
-              <div className="mt-3">
-                <Badge
-                  variant={project.status === "completed" ? "default" : "secondary"}
-                  className="text-xs"
-                >
-                  {project.status}
-                </Badge>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </Link>
-    </motion.div>
-  )
-}
+          )}
+        </div>
 
+        {/* 컨텐츠 영역 */}
+        <CardContent className="flex-1 p-5 space-y-4">
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold tracking-tight group-hover:text-primary transition-colors">
+              {project.title}
+            </h3>
+            {project.description && (
+              <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed">
+                {project.description}
+              </p>
+            )}
+          </div>
+          
+          {/* 기술 스택 (Null 체크) */}
+          <div className="flex flex-wrap gap-1.5">
+            {project.tech_stack?.slice(0, 5).map((tech) => (
+              <Badge 
+                key={tech} 
+                variant="outline" 
+                className="text-xs font-normal border-primary/20 text-muted-foreground bg-primary/5"
+              >
+                {tech}
+              </Badge>
+            ))}
+            {(project.tech_stack?.length || 0) > 5 && (
+               <span className="text-xs text-muted-foreground self-center">
+                 +{project.tech_stack!.length - 5}
+               </span>
+            )}
+          </div>
+        </CardContent>
+
+        {/* 하단 액션 버튼 */}
+        <CardFooter className="p-5 pt-0 flex gap-3 mt-auto">
+          {project.github_url && (
+            <Button variant="outline" size="sm" className="flex-1 gap-2" asChild>
+              <Link href={project.github_url} target="_blank">
+                <Github className="w-4 h-4" />
+                Code
+              </Link>
+            </Button>
+          )}
+          {project.demo_url && (
+            <Button size="sm" className="flex-1 gap-2" asChild>
+              <Link href={project.demo_url} target="_blank">
+                <ExternalLink className="w-4 h-4" />
+                Live Demo
+              </Link>
+            </Button>
+          )}
+        </CardFooter>
+      </Card>
+    </motion.div>
+  );
+}
