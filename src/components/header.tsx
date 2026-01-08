@@ -1,72 +1,76 @@
-import Link from "next/link"
-import { ThemeToggle } from "./theme-toggle"
-import { Github, Linkedin, Twitter, Mail } from "lucide-react"
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils"; // shadcn utils
+import { ThemeToggle } from "@/components/theme-toggle";
+import { motion } from "framer-motion";
+import { Github } from "lucide-react"; // npm install lucide-react 필요
 
 const navigation = [
-  { name: "홈", href: "/" },
-  { name: "소개", href: "/about" },
-  { name: "포트폴리오", href: "/portfolio" },
-  { name: "블로그", href: "/blog" },
-  { name: "연락", href: "/contact" },
-]
+  { name: "About", href: "/about" },
+  { name: "Portfolio", href: "/portfolio" },
+  { name: "Blog", href: "/blog" },
+  { name: "Contact", href: "/contact" },
+];
 
 export function Header() {
+  const pathname = usePathname();
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/80">
-      <div className="max-w-screen-xl mx-auto px-6 md:px-12 flex h-16 items-center justify-between">
+    // ✨ Glassmorphism 효과 적용
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+      {/* 레이아웃 너비와 일치시키는 max-w-3xl */}
+      <div className="w-full max-w-3xl mx-auto flex h-14 items-center justify-between px-6 md:px-0">
+        
         {/* Logo */}
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold">포트폴리오</span>
-        </Link>
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center space-x-2 group">
+            <span className="font-bold text-lg tracking-tight group-hover:text-primary transition-colors">
+              subeom.dev
+            </span>
+          </Link>
 
-        {/* Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className="text-sm font-medium transition-colors hover:text-primary"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </nav>
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-6">
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "relative text-sm font-medium transition-colors hover:text-primary",
+                  pathname === item.href
+                    ? "text-foreground"
+                    : "text-muted-foreground"
+                )}
+              >
+                {item.name}
+                {/* Active Link Underline Animation */}
+                {pathname === item.href && (
+                  <motion.div
+                    className="absolute -bottom-[19px] left-0 w-full h-[2px] bg-primary"
+                    layoutId="navbar-underline"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
+                )}
+              </Link>
+            ))}
+          </nav>
+        </div>
 
-        {/* Right side: Theme toggle and Social icons */}
-        <div className="flex items-center space-x-4">
-          <div className="hidden md:flex items-center space-x-2">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Github className="h-4 w-4" />
-              <span className="sr-only">GitHub</span>
-            </a>
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Linkedin className="h-4 w-4" />
-              <span className="sr-only">LinkedIn</span>
-            </a>
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <Twitter className="h-4 w-4" />
-              <span className="sr-only">Twitter</span>
-            </a>
-          </div>
+        {/* Right Side Actions */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="https://github.com/sooknise" 
+            target="_blank"
+            className="p-2 rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
+            aria-label="GitHub"
+          >
+            <Github className="w-5 h-5" />
+          </Link>
           <ThemeToggle />
         </div>
       </div>
     </header>
-  )
+  );
 }
-
