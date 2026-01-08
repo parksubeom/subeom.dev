@@ -1,92 +1,76 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import Image from "next/image"
-import { format } from "date-fns"
-import { ko } from "date-fns/locale"
-import { Calendar, Clock } from "lucide-react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/ui/card"
-import { Badge } from "@/shared/ui/badge"
-import { Post } from "../model/types"
-import { cn } from "@/shared/lib/utils"
+import Link from "next/link";
+import { motion } from "framer-motion";
+import { Calendar, Clock, ChevronRight, Eye, ThumbsUp } from "lucide-react"; // 아이콘 추가
+import { Badge } from "@/shared/ui/badge";
+import type { Post } from "@/entities/post/model/types";
 
 interface PostCardProps {
-  post: Post
-  className?: string
+  post: Post;
 }
 
-export function PostCard({ post, className }: PostCardProps) {
-  const publishedDate = post.published_at
-    ? format(new Date(post.published_at), "yyyy년 M월 d일", { locale: ko })
-    : null
+export function PostCard({ post }: PostCardProps) {
+  // 날짜 포맷팅 (YYYY.MM.DD)
+  const formattedDate = new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
   return (
     <Link href={`/blog/${post.slug}`}>
-      <Card
-        className={cn(
-          "h-full overflow-hidden hover:shadow-lg transition-shadow group",
-          className
-        )}
+      <motion.div
+        className="group relative flex flex-col gap-3 p-5 -mx-4 rounded-xl hover:bg-card/50 transition-colors border border-transparent hover:border-border/50"
+        whileHover={{ x: 4 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
       >
-        {post.thumbnail_url && (
-          <div className="relative h-48 w-full overflow-hidden">
-            <Image
-              src={post.thumbnail_url}
-              alt={post.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-            />
-          </div>
+        <div className="flex justify-between items-start">
+          <h3 className="text-xl font-bold tracking-tight group-hover:text-primary transition-colors break-keep">
+            {post.title}
+          </h3>
+          <ChevronRight className="w-5 h-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0" />
+        </div>
+        
+        {/* excerpt (요약)가 있을 때만 표시 */}
+        {post.excerpt && (
+          <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
+            {post.excerpt}
+          </p>
         )}
-        <CardHeader>
-          <div className="flex items-start justify-between gap-2 mb-2">
-            {post.category && (
-              <Badge variant="secondary" className="shrink-0">
-                {post.category}
-              </Badge>
-            )}
+
+        <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-muted-foreground/80 font-mono">
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-3.5 h-3.5" />
+            <span>{formattedDate}</span>
           </div>
-          <CardTitle className="line-clamp-2 mb-2">{post.title}</CardTitle>
-          {post.excerpt && (
-            <CardDescription className="line-clamp-2">
-              {post.excerpt}
-            </CardDescription>
-          )}
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground mb-4">
-            {publishedDate && (
-              <div className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
-                <time dateTime={post.published_at || undefined}>
-                  {publishedDate}
-                </time>
-              </div>
-            )}
-            {post.reading_time && (
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                <span>{post.reading_time}분</span>
-              </div>
-            )}
-          </div>
-          {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {post.tags.slice(0, 3).map((tag, index) => (
-                <Badge key={index} variant="outline" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-              {post.tags.length > 3 && (
-                <Badge variant="outline" className="text-xs">
-                  +{post.tags.length - 3}
-                </Badge>
-              )}
+          
+          {/* reading_time (숫자) 분 처리 */}
+          {post.reading_time && (
+            <div className="flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5" />
+              <span>{post.reading_time} min</span>
             </div>
           )}
-        </CardContent>
-      </Card>
-    </Link>
-  )
-}
 
+          {/* 조회수 (선택 사항 - 데이터 있으면 표시) */}
+          {post.view_count !== null && (
+             <div className="flex items-center gap-1.5 ml-auto md:ml-0">
+               <Eye className="w-3.5 h-3.5" />
+               <span>{post.view_count}</span>
+             </div>
+          )}
+
+          {/* 태그 리스트 */}
+          <div className="flex gap-2 ml-auto">
+            {post.tags?.map((tag) => (
+              <Badge key={tag} variant="secondary" className="text-[10px] px-2 py-0.5 font-normal bg-secondary/50">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </Link>
+  );
+}

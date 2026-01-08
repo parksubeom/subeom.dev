@@ -1,25 +1,20 @@
-"use server"
+// src/entities/post/api/get-posts.ts
+import { createStaticClient } from "@/shared/lib/supabase/static";
+import type { Post } from "@/entities/post/model/types";
 
-import { createServerClient } from "@/shared/lib/supabase/server"
-import { Post } from "../model/types"
-
-/**
- * 모든 게시글을 가져옵니다 (목록용).
- */
 export async function getPosts(): Promise<Post[]> {
-  const supabase = await createServerClient()
+  const supabase = createStaticClient();
   
   const { data, error } = await supabase
-    .from('posts')
-    .select('*')
-    .eq('published', true)
-    .order('published_at', { ascending: false })
+    .from("posts")
+    .select("*")
+    .eq("published", true) // 공개된 글만
+    .order("published_at", { ascending: false }); // 최신순
 
   if (error) {
-    console.error('Error fetching posts:', error)
-    return []
+    console.error("Error fetching posts:", error);
+    return [];
   }
 
-  return (data as Post[]) || []
+  return data as Post[];
 }
-
