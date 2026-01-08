@@ -1,47 +1,52 @@
-import { notFound } from "next/navigation"
-import { getPostBySlug, getAllPostSlugs } from "@/entities/post/api"
-import { PostDetailSection } from "@/widgets/blog"
-import { Metadata } from "next"
+import { notFound } from "next/navigation";
+import { PostDetailSection } from "@/widgets/blog/ui/post-detail-section";
+import { getAllPostSlugs } from "@/entities/post/api/get-all-post-slugs";
+import { getPostBySlug } from "@/entities/post/api/get-post-by-slug";
 
-export async function generateStaticParams() {
-  const slugs = await getAllPostSlugs()
-  return slugs.map((slug) => ({
-    slug,
-  }))
+interface Props {
+  params: {
+    slug: string;
+  };
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
-  const post = await getPostBySlug(slug)
+// 1. SSG를 위한 정적 경로 생성 (이제 에러가 안 날 것입니다)
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs();
+  return slugs.map((slug) => ({
+    slug,
+  }));
+}
 
+// 2. 메타데이터 생성
+export async function generateMetadata({ params }: Props) {
+  const post = await getPostBySlug(params.slug);
+  
   if (!post) {
     return {
-      title: "게시글을 찾을 수 없습니다",
-    }
+      title: "Post Not Found",
+    };
   }
 
   return {
-    title: `${post.title} | Blog`,
-    description: post.excerpt || post.description || undefined,
-  }
+    title: post.title,
+    description: post.excerpt || post.title,
+    openGraph: {
+      title: post.title,
+      description: post.excerpt || post.title,
+      type: "article",
+      publishedTime: post.published_at || post.created_at,
+      authors: ["Subeom Park"],
+    },
+  };
 }
 
-export default async function PostPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params
-  const post = await getPostBySlug(slug)
+// 3. 페이지 렌더링
+export default async function BlogPostPage({ params }: Props) {
+  const post = await getPostBySlug(params.slug);
 
-  if (!post || !post.content) {
-    notFound()
+  if (!post) {
+    notFound();
   }
 
-  return <PostDetailSection post={post} />
+  return <PostDetailSection post={post} />;
 }
-
