@@ -1,23 +1,12 @@
-"use server"
+import { createStaticClient } from "@/shared/lib/supabase/static";
 
-import { createServerClient } from "@/shared/lib/supabase/server"
-
-/**
- * 모든 게시글 slug를 가져옵니다 (generateStaticParams용).
- */
-export async function getAllPostSlugs(): Promise<string[]> {
-  const supabase = await createServerClient()
+export async function getAllPostSlugs() {
+  const supabase = createStaticClient();
   
-  const { data, error } = await supabase
-    .from('posts')
-    .select('slug')
-    .eq('published', true)
+  // DB에서 실제로 slug 조회
+  const { data } = await supabase
+    .from("posts")
+    .select("slug");
 
-  if (error) {
-    console.error('Error fetching post slugs:', error)
-    return []
-  }
-
-  return data?.map((post) => post.slug) || []
+  return data?.map((post) => post.slug) || [];
 }
-

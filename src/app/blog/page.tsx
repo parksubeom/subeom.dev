@@ -1,25 +1,15 @@
-import { getPosts } from "@/entities/post/api"
-import { PostListSection } from "@/widgets/blog"
-import { Metadata } from "next"
+import { PostListSection } from "@/widgets/blog";
+import { getPosts } from "@/entities/post/api/get-posts";
 
-export const metadata: Metadata = {
-  title: "Blog | 기술 블로그",
-  description: "개발 관련 글과 기술적인 내용을 공유합니다",
-}
+export const metadata = {
+  title: "Blog",
+  description: "기술 블로그",
+};
 
+// Next.js 14 서버 컴포넌트
 export default async function BlogPage() {
-  const posts = await getPosts()
+  // DB에서 데이터 가져오기 (Real Data)
+  const posts = await getPosts();
 
-  return (
-    <div className="container px-4 py-12 md:py-16">
-      <div className="mb-12">
-        <h1 className="text-4xl font-bold tracking-tight mb-4">블로그</h1>
-        <p className="text-muted-foreground text-lg">
-          개발 관련 글과 기술적인 내용을 공유합니다
-        </p>
-      </div>
-      <PostListSection posts={posts} />
-    </div>
-  )
+  return <PostListSection initialPosts={posts} />;
 }
-
