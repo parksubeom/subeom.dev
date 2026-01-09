@@ -21,7 +21,11 @@ export async function getProjects(): Promise<Project[]> {
     return []
   }
 
-  return (data as Project[]) || []
+  if (!data) {
+    return []
+  }
+
+  return (data as unknown as Project[])
 }
 
 /**
@@ -41,7 +45,11 @@ export async function getProjectById(id: string): Promise<Project | null> {
     return null
   }
 
-  return (data as Project) || null
+  if (!data) {
+    return null
+  }
+
+  return (data as unknown as Project)
 }
 
 /**
@@ -59,7 +67,11 @@ export async function getAllProjectIds(): Promise<string[]> {
     return []
   }
 
-  return data.map((project) => project.id) || []
+  if (!data) {
+    return []
+  }
+
+  return data.map((project) => project.id)
 }
 
 
