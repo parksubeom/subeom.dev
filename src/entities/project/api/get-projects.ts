@@ -1,24 +1,18 @@
-"use server"
+import { createStaticClient } from "@/shared/lib/supabase/static";
+import type { Project } from "@/entities/project/model/types";
 
-import { createServerClient } from "@/shared/lib/supabase/server"
-import { Project } from "../model/types"
-
-/**
- * 모든 프로젝트를 order 순으로 가져옵니다.
- */
 export async function getProjects(): Promise<Project[]> {
-  const supabase = await createServerClient()
+  const supabase = createStaticClient();
   
   const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .order('order', { ascending: true, nullsFirst: false })
+    .from("projects")
+    .select("*")
+    .order("order", { ascending: true }); // 순서대로 정렬
 
   if (error) {
-    console.error('Error fetching projects:', error)
-    return []
+    console.error("Error fetching projects:", error);
+    return [];
   }
 
-  return (data as Project[]) || []
+  return data as unknown as Project[];
 }
-
