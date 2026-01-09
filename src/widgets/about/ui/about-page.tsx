@@ -1,18 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Download, Briefcase, GraduationCap } from "lucide-react";
+import { Briefcase, GraduationCap } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/ui/card";
 import { Badge } from "@/shared/ui/badge";
 
-// 이력서 데이터 (Resume Data)
+// 경력 데이터
 const experiences = [
   {
     id: 1,
     company: "(주)에스앤씨랩",
     role: "웹 접근성 컨설팅 및 개선 개발",
-    period: "202x - 202x", // 정확한 기간은 이력서 참조하여 수정 필요
+    period: "2024.07 - ", // 정확한 기간은 이력서 참조하여 수정 필요
     description: "MAU 480만 대규모 서비스(CJ CGV 등)의 접근성 진단 및 개선 프로젝트 수행",
     achievements: [
       "개발자 친화적 가이드라인 배포로 소통 비용 절감",
@@ -24,7 +24,7 @@ const experiences = [
     id: 2,
     company: "널리소프트 (SSEM)",
     role: "Frontend Developer",
-    period: "202x - 202x",
+    period: "2024.03 - 2024.07",
     description: "SSEM 홈페이지 전면 리뉴얼 및 사내 운영 백오피스 개발",
     achievements: [
       "레거시 스타일 청산 및 반응형 웹 구축으로 UX 개선",
@@ -36,7 +36,7 @@ const experiences = [
     id: 3,
     company: "모아프렌즈",
     role: "ICT 인턴",
-    period: "202x - 202x",
+    period: "2022.07 - 2023.01",
     description: "데이터 관제 대시보드 개발 및 레거시 마이그레이션",
     achievements: [
       "데이터 집계 시간 일 1시간 → 실시간(0분) 단축",
@@ -77,21 +77,13 @@ export function AboutPage() {
           className="space-y-4"
         >
           <h1 className="text-4xl font-bold tracking-tight">About Me</h1>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="space-y-2">
-              <h2 className="text-xl font-medium text-muted-foreground">
-                Frontend Developer, <span className="text-foreground font-semibold">박수범</span>
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Seoul, Korea • Available for work
-              </p>
-            </div>
-            <a href="/resume.pdf" download="박수범_이력서.pdf">
-              <Button className="gap-2">
-                <Download className="w-4 h-4" />
-                Download Resume
-              </Button>
-            </a>
+          <div className="space-y-2">
+            <h2 className="text-xl font-medium text-muted-foreground">
+              Frontend Developer, <span className="text-foreground font-semibold">박수범</span>
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Seoul, Korea • Available for work
+            </p>
           </div>
         </motion.div>
 

@@ -194,10 +194,8 @@ export type Database = {
           linkedin_url: string | null
           location: string | null
           name: string | null
-          resume_url: string | null
           skills: string[] | null
           title: string | null
-          twitter_url: string | null
           updated_at: string
         }
         Insert: {
@@ -211,10 +209,8 @@ export type Database = {
           linkedin_url?: string | null
           location?: string | null
           name?: string | null
-          resume_url?: string | null
           skills?: string[] | null
           title?: string | null
-          twitter_url?: string | null
           updated_at?: string
         }
         Update: {
@@ -228,10 +224,8 @@ export type Database = {
           linkedin_url?: string | null
           location?: string | null
           name?: string | null
-          resume_url?: string | null
           skills?: string[] | null
           title?: string | null
-          twitter_url?: string | null
           updated_at?: string
         }
         Relationships: []

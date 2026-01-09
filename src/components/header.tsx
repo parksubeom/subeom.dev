@@ -61,7 +61,7 @@ export function Header() {
         {/* Right Side Actions */}
         <div className="flex items-center gap-2">
           <Link
-            href="https://github.com/sooknise" 
+            href="https://github.com/parksubeom" 
             target="_blank"
             className="p-2 rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground"
             aria-label="GitHub"

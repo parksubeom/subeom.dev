@@ -6,9 +6,8 @@ import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import type { Post } from "@/entities/post/model/types";
-
-// 실제로는 MDX 렌더러가 필요하지만, 일단 내용(content)을 텍스트로 뿌려주는 형태로 구현합니다.
-// 추후 'next-mdx-remote' 등을 도입하면 content 부분을 교체하면 됩니다.
+// ✨ 추가됨: 마크다운 뷰어 컴포넌트 import
+import { MarkdownViewer } from "@/shared/ui/markdown-viewer"; 
 
 interface PostDetailSectionProps {
   post: Post;
@@ -77,11 +76,13 @@ export function PostDetailSection({ post }: PostDetailSectionProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        className="prose prose-lg dark:prose-invert max-w-none break-keep leading-8"
+        // prose 관련 클래스는 MarkdownViewer 내부 혹은 여기서 제어할 수 있습니다.
+        // MarkdownViewer에 prose 설정이 되어 있다면 여기선 제거해도 됩니다.
+        className="min-h-[300px]" 
       >
-        {/* 임시: content가 줄바꿈되어 보이도록 처리 */}
         {post.content ? (
-          <div className="whitespace-pre-wrap">{post.content}</div>
+          /* ✨ 수정됨: 기존 단순 텍스트 출력 대신 MarkdownViewer 사용 */
+          <MarkdownViewer content={post.content} />
         ) : (
           <p className="text-muted-foreground italic">작성된 내용이 없습니다.</p>
         )}
