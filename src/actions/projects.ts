@@ -62,3 +62,4 @@ export async function getAllProjectIds(): Promise<string[]> {
   return data.map((project) => project.id) || []
 }
 
+
