@@ -1,7 +1,3 @@
-import { Tables } from "@/type/supabase"
-
-type Profile = Tables<'profiles'>
-
 interface SkillsSectionProps {
   skills?: string[] | null
 }
