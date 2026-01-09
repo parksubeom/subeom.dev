@@ -13,7 +13,7 @@ interface PostInteractionProps {
 }
 
 export function PostInteraction({
-  postId,
+  postId: _postId,
   initialLikeCount = 0,
   initialViewCount = 0,
   className,

@@ -1,6 +1,5 @@
 "use client"
 
-import { useState } from "react"
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import { Project } from "@/entities/project/model/types"
 
