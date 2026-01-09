@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Calendar, Clock, ChevronRight, Eye, ThumbsUp } from "lucide-react"; // 아이콘 추가
+import { Calendar, Clock, ChevronRight, Eye } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import type { Post } from "@/entities/post/model/types";
 
