@@ -7,7 +7,7 @@ import { cn } from "@/shared/lib/utils"
 interface CodeBlockProps {
   children: React.ReactNode
   className?: string
-  [key: string]: any
+  [key: string]: unknown
 }
 
 export function CodeBlock({ children, className, ...props }: CodeBlockProps) {
