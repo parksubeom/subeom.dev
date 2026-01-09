@@ -13,11 +13,13 @@ interface PostInteractionProps {
 }
 
 export function PostInteraction({
-  postId: _postId,
+  postId, // TODO: 향후 Supabase 업데이트에 사용 예정
   initialLikeCount = 0,
   initialViewCount = 0,
   className,
 }: PostInteractionProps) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  void postId
   const [likeCount, setLikeCount] = useState(initialLikeCount || 0)
   const [isLiked, setIsLiked] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
