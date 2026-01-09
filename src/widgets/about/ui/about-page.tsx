@@ -2,9 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Briefcase, GraduationCap } from "lucide-react";
-import { Button } from "@/shared/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/ui/card";
-import { Badge } from "@/shared/ui/badge";
 
 // 경력 데이터
 const experiences = [
