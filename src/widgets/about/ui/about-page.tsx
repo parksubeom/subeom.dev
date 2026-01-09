@@ -92,8 +92,8 @@ export function AboutPage() {
           transition={{ delay: 0.1 }}
           className="pl-6 border-l-4 border-primary/30 italic text-lg text-muted-foreground leading-relaxed py-2 bg-muted/20 rounded-r-lg"
         >
-          "단순한 기능 구현을 넘어 '왜(Why)'를 끊임없이 질문하며, 서비스 자체에 대한 오너십을 가지고 제품을 만듭니다. 
-          웹 접근성 컨설팅 경험을 바탕으로 포용적인 인터페이스와 견고한 코드를 지향합니다."
+          &quot;단순한 기능 구현을 넘어 &apos;왜(Why)&apos;를 끊임없이 질문하며, 서비스 자체에 대한 오너십을 가지고 제품을 만듭니다. 
+          웹 접근성 컨설팅 경험을 바탕으로 포용적인 인터페이스와 견고한 코드를 지향합니다.&quot;
         </motion.blockquote>
       </section>
 

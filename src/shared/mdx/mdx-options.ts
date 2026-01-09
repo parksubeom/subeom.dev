@@ -21,15 +21,15 @@ export const mdxOptions = {
         {
           theme: "github-dark",
           keepBackground: false,
-          onVisitLine(node: any) {
+          onVisitLine(node: { children: Array<{ type: string; value?: string }> }) {
             if (node.children.length === 0) {
               node.children = [{ type: "text", value: " " }]
             }
           },
-          onVisitHighlightedLine(node: any) {
+          onVisitHighlightedLine(node: { properties: { className: string[] } }) {
             node.properties.className.push("highlighted")
           },
-          onVisitHighlightedWord(node: any) {
+          onVisitHighlightedWord(node: { properties: { className: string[] } }) {
             node.properties.className = ["highlighted-word"]
           },
         },
