@@ -4,83 +4,32 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { ProjectCard } from "@/entities/project/ui/project-card";
+import { ProjectModal } from "@/widgets/portfolio/ui/project-modal";
 import type { Project } from "@/entities/project/model/types";
 
-// Supabase 타입에 맞춘 더미 데이터
-const PROJECTS: Project[] = [
-  {
-    id: "1",
-    title: "애니스쿨 (Anyschool)",
-    description: "얼굴 공개 부담 없이 개성을 표현할 수 있는 랜덤 동물 캐릭터 생성 서비스. AWS Lambda를 활용한 이미지 처리 파이프라인 구축.",
-    long_description: null,
-    thumbnail_url: null,
-    images: [],
-    tech_stack: ["React", "AWS Lambda", "S3"],
-    category: "Web",
-    demo_url: null,
-    github_url: "https://github.com/sooknise",
-    created_at: "2023-03-01T00:00:00Z",
-    updated_at: "2023-03-01T00:00:00Z",
-    start_date: "2023-02-01",
-    end_date: "2023-03-01",
-    featured: true,
-    status: "Completed",
-    order: 1
-  },
-  {
-    id: "2",
-    title: "언커버 (Uncover)",
-    description: "저작권 문제없는 음원을 찾고 영상과 미리 매칭해보는 스트리밍 플랫폼. Recoil 상태 관리와 Audio/Video 동기화 로직 구현.",
-    long_description: null,
-    thumbnail_url: null,
-    images: [],
-    tech_stack: ["React", "TypeScript", "Recoil"],
-    category: "Web",
-    demo_url: null,
-    github_url: "https://github.com/sooknise",
-    created_at: "2023-05-01T00:00:00Z",
-    updated_at: "2023-05-01T00:00:00Z",
-    start_date: "2023-05-01",
-    end_date: "2023-05-30",
-    featured: true,
-    status: "Completed",
-    order: 2
-  },
-  {
-    id: "3",
-    title: "항해플러스 아카이빙",
-    description: "LMS 과제 제출 이력 영구 보존 서비스. 결함 허용 PR 매칭 알고리즘 설계 및 4-Layer Fallback 로직 구현.",
-    long_description: null,
-    thumbnail_url: null,
-    images: [],
-    tech_stack: ["Node.js", "NestJS", "GitHub API"],
-    category: "Backend",
-    demo_url: null,
-    github_url: "https://github.com/sooknise",
-    created_at: "2026-01-01T00:00:00Z",
-    updated_at: "2026-01-01T00:00:00Z",
-    start_date: "2025-12-01",
-    end_date: "2026-01-01",
-    featured: true,
-    status: "Completed",
-    order: 3
-  }
-];
+// ✨ Props 인터페이스 정의
+interface PortfolioGridProps {
+  initialProjects: Project[];
+}
 
-// 카테고리 목록 추출 (null 제외 및 중복 제거)
-const CATEGORIES = ["All", ...Array.from(new Set(
-  PROJECTS.map((p) => p.category).filter((c): c is string => c !== null)
-))];
-
-export function PortfolioGrid() {
+export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  const filteredProjects = PROJECTS.filter(
+  // 카테고리 추출 (Real Data 기반)
+  // category가 null이 아닌 것만 추출하고 중복 제거
+  const categories = ["All", ...Array.from(new Set(
+    initialProjects.map((p) => p.category).filter((c): c is string => c !== null)
+  ))];
+
+  // 필터링 로직
+  const filteredProjects = initialProjects.filter(
     (project) => activeCategory === "All" || project.category === activeCategory
   );
 
   return (
     <div className="space-y-12">
+      {/* Header */}
       <div className="space-y-6 text-center md:text-left">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -94,10 +43,10 @@ export function PortfolioGrid() {
           </p>
         </motion.div>
 
-        {/* 카테고리 필터 Tabs */}
+        {/* Category Tabs */}
         <Tabs defaultValue="All" className="w-full" onValueChange={setActiveCategory}>
           <TabsList className="bg-muted/50 backdrop-blur-sm p-1 inline-flex flex-wrap h-auto">
-            {CATEGORIES.map((category) => (
+            {categories.map((category) => (
               <TabsTrigger 
                 key={category} 
                 value={category}
@@ -110,10 +59,10 @@ export function PortfolioGrid() {
         </Tabs>
       </div>
 
-      {/* 프로젝트 그리드 */}
+      {/* Projects Grid */}
       <motion.div 
         layout
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr"
       >
         <AnimatePresence mode="popLayout">
           {filteredProjects.map((project) => (
@@ -125,17 +74,28 @@ export function PortfolioGrid() {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.2 }}
             >
-              <ProjectCard project={project} />
+              <ProjectCard 
+                project={project} 
+                onClick={() => setSelectedProject(project)} 
+              />
             </motion.div>
           ))}
         </AnimatePresence>
       </motion.div>
-      
+
+      {/* Empty State */}
       {filteredProjects.length === 0 && (
          <div className="text-center py-20 text-muted-foreground">
            해당 카테고리의 프로젝트가 없습니다.
          </div>
       )}
+
+      {/* Modal */}
+      <ProjectModal 
+        project={selectedProject} 
+        isOpen={!!selectedProject} 
+        onClose={() => setSelectedProject(null)} 
+      />
     </div>
   );
 }
