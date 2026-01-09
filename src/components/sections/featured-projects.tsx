@@ -84,3 +84,4 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   )
 }
 
+

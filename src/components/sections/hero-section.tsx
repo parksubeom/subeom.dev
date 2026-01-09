@@ -44,3 +44,4 @@ export function HeroSection({ name, title, bio }: HeroSectionProps) {
   )
 }
 
+
