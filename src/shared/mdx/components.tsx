@@ -93,6 +93,8 @@ export const mdxComponents = {
     className,
     alt,
     src,
+    width,
+    height,
     ...props
   }: React.ImgHTMLAttributes<HTMLImageElement>) => {
     if (!src) return null
@@ -102,8 +104,8 @@ export const mdxComponents = {
         <Image
           src={src}
           alt={alt || ""}
-          width={800}
-          height={400}
+          width={typeof width === 'number' ? width : 800}
+          height={typeof height === 'number' ? height : 400}
           className={cn("rounded-lg border w-full h-auto", className)}
           {...props}
         />

@@ -11,7 +11,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from('projects')
     .select('*')
-    .eq('featured', true)
+    .eq('featured' as never, true)
     .order('order', { ascending: true, nullsFirst: false })
     .limit(3)
 
@@ -20,7 +20,11 @@ export async function getFeaturedProjects(): Promise<Project[]> {
     return []
   }
 
-  return (data as Project[]) || []
+  if (!data) {
+    return []
+  }
+
+  return (data as unknown as Project[])
 }
 
 export async function getLatestPosts(): Promise<Post[]> {
@@ -29,7 +33,7 @@ export async function getLatestPosts(): Promise<Post[]> {
   const { data, error } = await supabase
     .from('posts')
     .select('*')
-    .eq('published', true)
+    .eq('published' as never, true)
     .order('published_at', { ascending: false })
     .limit(4)
 
@@ -38,7 +42,11 @@ export async function getLatestPosts(): Promise<Post[]> {
     return []
   }
 
-  return (data as Post[]) || []
+  if (!data) {
+    return []
+  }
+
+  return (data as unknown as Post[])
 }
 
 export async function getProfile(): Promise<Profile | null> {
@@ -55,6 +63,10 @@ export async function getProfile(): Promise<Profile | null> {
     return null
   }
 
-  return (data as Profile) || null
+  if (!data) {
+    return null
+  }
+
+  return (data as unknown as Profile)
 }
 

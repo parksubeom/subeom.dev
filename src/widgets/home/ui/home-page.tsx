@@ -2,25 +2,20 @@ import { HeroSection } from "./hero-section"
 import { FeaturedProjects } from "./featured-projects"
 import { LatestPosts } from "./latest-posts"
 import { SkillsSection } from "./skills-section"
-import { getFeaturedProjects, getLatestPosts, getProfile } from "@/lib/supabase/queries"
+import { getFeaturedProjects, getLatestPosts } from "@/lib/supabase/queries"
 
 export async function HomePage() {
-  const [featuredProjects, latestPosts, profile] = await Promise.all([
+  const [featuredProjects, latestPosts] = await Promise.all([
     getFeaturedProjects(),
     getLatestPosts(),
-    getProfile(),
   ])
 
   return (
     <>
-      <HeroSection
-        name={profile?.name}
-        title={profile?.title}
-        bio={profile?.bio}
-      />
+      <HeroSection />
       <FeaturedProjects projects={featuredProjects} />
       <LatestPosts posts={latestPosts} />
-      <SkillsSection skills={profile?.skills} />
+      <SkillsSection />
     </>
   )
 }
