@@ -1,6 +1,6 @@
 "use client";
 
-import { BrainCircuit, GitMerge, FileText, ShieldCheck, Sparkles } from "lucide-react";
+import { BrainCircuit, GitMerge, FileText, ShieldCheck } from "lucide-react";
 
 export function AiWorkflow() {
   const steps = [
