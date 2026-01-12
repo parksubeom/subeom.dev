@@ -10,7 +10,7 @@ interface MdxComponentProps {
 export function MdxComponent({ source }: MdxComponentProps) {
   return (
     <MDXRemote
-      {...source}
+      source={source}
       components={{
         ...mdxComponents,
         pre: (props: React.ComponentPropsWithoutRef<"pre">) => {

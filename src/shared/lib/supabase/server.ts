@@ -13,7 +13,7 @@ export async function createServerClient() {
       getAll() {
         return cookieStore.getAll()
       },
-      setAll(cookiesToSet) {
+      setAll(cookiesToSet: Array<{ name: string; value: string; options?: { [key: string]: unknown } }>) {
         try {
           cookiesToSet.forEach(({ name, value, options }) =>
             cookieStore.set(name, value, options)
@@ -25,6 +25,6 @@ export async function createServerClient() {
         }
       },
     },
-  })
+  } as Parameters<typeof createClient<Database>>[2])
 }
 

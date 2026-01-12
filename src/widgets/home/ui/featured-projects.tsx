@@ -8,13 +8,14 @@ import { Button } from "@/shared/ui/button";
 import { ProjectCard } from "@/entities/project/ui/project-card";
 import { ProjectModal } from "@/widgets/portfolio/ui/project-modal"; // ✨ 모달 추가
 import type { Project } from "@/entities/project/model/types";
+import type { Tables } from "@/type/supabase";
 
 interface FeaturedProjectsProps {
-  projects: Project[];
+  projects: Project[] | Tables<'projects'>[];
 }
 
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null); // ✨ 상태 관리 추가
+  const [selectedProject, setSelectedProject] = useState<Project | Tables<'projects'> | null>(null); // ✨ 상태 관리 추가
 
   // Featured된 프로젝트만 최대 4개 보여주기
   const displayedProjects = projects

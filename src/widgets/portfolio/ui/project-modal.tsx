@@ -8,9 +8,10 @@ import remarkGfm from "remark-gfm";
 import { Button } from "@/shared/ui/button";
 import { Badge } from "@/shared/ui/badge";
 import type { Project } from "@/entities/project/model/types";
+import type { Tables } from "@/type/supabase";
 
 interface ProjectModalProps {
-  project: Project | null;
+  project: Project | Tables<'projects'> | null;
   isOpen: boolean;
   onClose: () => void;
 }
@@ -36,6 +37,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   }, [isOpen, onClose]);
 
   if (!project || !isOpen) return null;
+
+  // detailInfo가 없는 경우 모달을 열지 않음 (Tables<'projects'> 타입)
+  if (!('detailInfo' in project) || !project.detailInfo) {
+    return null;
+  }
 
   const { detailInfo } = project;
 
