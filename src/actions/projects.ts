@@ -37,7 +37,7 @@ export async function getProjectById(id: string): Promise<Project | null> {
   const { data, error } = await supabase
     .from('projects')
     .select('*')
-    .eq('id', id)
+    .eq('id' as never, id)
     .maybeSingle()
 
   if (error) {
@@ -71,7 +71,7 @@ export async function getAllProjectIds(): Promise<string[]> {
     return []
   }
 
-  return data.map((project) => project.id)
+  return (data as Array<{ id: string }>).map((project) => project.id)
 }
 
 
