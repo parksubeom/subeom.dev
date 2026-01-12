@@ -11,7 +11,6 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
-  // 날짜 포맷팅 (YYYY.MM.DD)
   const formattedDate = new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
     year: "numeric",
     month: "2-digit",
@@ -32,20 +31,19 @@ export function PostCard({ post }: PostCardProps) {
           <ChevronRight className="w-5 h-5 text-muted-foreground opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0" />
         </div>
         
-        {/* excerpt (요약)가 있을 때만 표시 */}
         {post.excerpt && (
           <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
             {post.excerpt}
           </p>
         )}
 
-        <div className="flex flex-wrap items-center gap-4 mt-2 text-xs text-muted-foreground/80 font-mono">
+        {/* 메타데이터 영역 */}
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-2 text-xs text-muted-foreground/80 font-mono">
           <div className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5" />
             <span>{formattedDate}</span>
           </div>
           
-          {/* reading_time (숫자) 분 처리 */}
           {post.reading_time && (
             <div className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
@@ -53,18 +51,17 @@ export function PostCard({ post }: PostCardProps) {
             </div>
           )}
 
-          {/* 조회수 (선택 사항 - 데이터 있으면 표시) */}
           {post.view_count !== null && (
-             <div className="flex items-center gap-1.5 ml-auto md:ml-0">
+             <div className="flex items-center gap-1.5">
                <Eye className="w-3.5 h-3.5" />
                <span>{post.view_count}</span>
              </div>
           )}
 
-          {/* 태그 리스트 */}
-          <div className="flex gap-2 ml-auto">
+          {/* ✨ 태그 리스트 수정 부분 */}
+          <div className="flex flex-wrap gap-2 w-full md:w-auto md:ml-auto mt-2 md:mt-0">
             {post.tags?.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-[10px] px-2 py-0.5 font-normal bg-secondary/50">
+              <Badge key={tag} variant="secondary" className="text-[10px] px-2 py-0.5 font-normal bg-secondary/50 whitespace-nowrap">
                 {tag}
               </Badge>
             ))}
