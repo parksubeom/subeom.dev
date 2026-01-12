@@ -6,15 +6,16 @@ import { ArrowRight, Folder } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import { Card, CardContent } from "@/shared/ui/card";
 import type { Project } from "@/entities/project/model/types";
+import type { Tables } from "@/type/supabase";
 
 interface ProjectCardProps {
-  project: Project;
+  project: Project | Tables<'projects'>;
   onClick: () => void;
   priority?: boolean; // LCP 최적화를 위한 속성 유지
 }
 
 export function ProjectCard({ project, onClick, priority = false }: ProjectCardProps) {
-  const displayTechStack = project.detailInfo?.techStack || project.tech_stack || [];
+  const displayTechStack = ('detailInfo' in project && project.detailInfo?.techStack) || project.tech_stack || [];
 
   return (
     <motion.div
