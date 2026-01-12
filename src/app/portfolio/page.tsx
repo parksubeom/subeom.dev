@@ -1,7 +1,10 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { PortfolioGrid } from "@/widgets/portfolio/ui/portfolio-grid";
 import { getProjects } from "@/entities/project/api/get-projects";
-import { getDeepDivePosts } from "@/entities/post/api/get-deep-dive-posts"; // ✨ 방금 만든 API
-import { PostCard } from "@/entities/post/ui/post-card"; // ✨ 기존 블로그 카드 재사용
+import { getRecentPosts } from "@/entities/post/api/get-recent-posts"; // ✨ 변경된 API import
+import { PostCard } from "@/entities/post/ui/post-card";
+import { Button } from "@/shared/ui/button";
 
 export const metadata = {
   title: "Portfolio",
@@ -9,10 +12,10 @@ export const metadata = {
 };
 
 export default async function PortfolioPage() {
-  // 병렬로 데이터 가져오기 (Waterfall 방지)
-  const [projects, deepDivePosts] = await Promise.all([
+  // 병렬로 데이터 가져오기 (최신 글 3개 요청)
+  const [projects, recentPosts] = await Promise.all([
     getProjects(),
-    getDeepDivePosts(),
+    getRecentPosts(3), // ✨ 최신 글 3개만 가져오기
   ]);
 
   return (
@@ -22,26 +25,45 @@ export default async function PortfolioPage() {
       
       <div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent" />
       
-      {/* 2. 테크니컬 딥다이브 섹션 (블로그 글 연동) */}
+      {/* 2. 최신 블로그 글 섹션 */}
       <section className="space-y-8">
-        <div className="space-y-4">
-          <h2 className="text-3xl font-bold tracking-tight">Technical Deep Dive</h2>
-          <p className="text-muted-foreground text-lg max-w-2xl">
-            단순한 구현을 넘어, <strong>기술적 난제</strong>를 해결하고 성능을 최적화했던 엔지니어링 기록입니다.
-          </p>
+        <div className="flex items-end justify-between">
+          <div className="space-y-4">
+            <h2 className="text-3xl font-bold tracking-tight">Latest Articles</h2>
+            <p className="text-muted-foreground text-lg max-w-2xl">
+              지속적인 학습과 성장을 기록합니다. 최근 작성한 블로그 글들을 확인해보세요.
+            </p>
+          </div>
+          
+          {/* 전체보기 버튼 추가 (선택사항) */}
+          <Button variant="ghost" asChild className="hidden md:flex gap-2 group">
+            <Link href="/blog">
+              View all posts
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </Button>
         </div>
 
+        {/* 게시글 목록 (3개) */}
         <div className="grid gap-6">
-          {deepDivePosts.length > 0 ? (
-            deepDivePosts.map((post) => (
+          {recentPosts.length > 0 ? (
+            recentPosts.map((post) => (
               <PostCard key={post.id} post={post} />
             ))
           ) : (
-            <div className="text-muted-foreground py-10">
-              등록된 딥다이브 게시물이 없습니다.
+            <div className="text-muted-foreground py-10 text-center border rounded-lg bg-muted/20">
+              작성된 게시물이 없습니다.
             </div>
           )}
         </div>
+
+        {/* 모바일용 전체보기 버튼 (하단 배치) */}
+        <Button variant="outline" asChild className="w-full md:hidden gap-2">
+          <Link href="/blog">
+            View all posts
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </Button>
       </section>
     </div>
   );
