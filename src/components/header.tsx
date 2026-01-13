@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils"; 
+import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { motion } from "framer-motion";
-import { Github, Menu } from "lucide-react"; // ✨ Menu 아이콘 추가
-import { Button } from "@/components/ui/button"; // 혹은 "@/shared/ui/button" (경로 확인 필요)
+import { Github, Menu } from "lucide-react";
+
+// ✨ FSD 구조에 맞게 경로 수정 (@/components -> @/shared)
+import { Button } from "@/shared/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -14,7 +16,8 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetClose,
-} from "@/components/ui/sheet"; // 혹은 "@/shared/ui/sheet" (경로 확인 필요)
+} from "@/components/ui/sheet";
+import { Logo } from "@/shared/ui/logo"; // ✨ 아까 만든 로고 컴포넌트 적용
 
 const navigation = [
   { name: "About", href: "/about" },
@@ -33,9 +36,8 @@ export function Header() {
         {/* 1. Left: Logo & Desktop Nav */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center space-x-2 group">
-            <span className="font-bold text-lg tracking-tight group-hover:text-primary transition-colors">
-              subeom.dev
-            </span>
+            {/* ✨ 텍스트 대신 Logo 컴포넌트 사용 */}
+            <Logo />
           </Link>
 
           {/* Desktop Navigation (md 이상에서만 보임) */}
@@ -70,7 +72,7 @@ export function Header() {
           <Link
             href="https://github.com/parksubeom" 
             target="_blank"
-            className="p-2 rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground hidden sm:block" // 모바일에선 공간 부족시 숨길 수도 있음
+            className="p-2 rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground hidden sm:block"
             aria-label="GitHub"
           >
             <Github className="w-5 h-5" />
@@ -90,8 +92,9 @@ export function Header() {
               
               <SheetContent side="right" className="w-[300px] sm:w-[350px]">
                 <SheetHeader className="text-left border-b pb-4 mb-4">
-                  <SheetTitle className="font-bold text-lg">
-                    subeom.dev
+                  <SheetTitle>
+                    {/* 모바일 메뉴 내부에도 로고 적용 */}
+                    <Logo />
                   </SheetTitle>
                 </SheetHeader>
                 
@@ -112,7 +115,7 @@ export function Header() {
                     </SheetClose>
                   ))}
                   
-                  {/* 모바일 메뉴 내 GitHub 링크 추가 (선택사항) */}
+                  {/* 모바일 메뉴 내 GitHub 링크 */}
                   <div className="pt-4 mt-2 border-t">
                     <Link
                       href="https://github.com/parksubeom"
