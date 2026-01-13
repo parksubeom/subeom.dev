@@ -33,11 +33,23 @@ export function ContactForm() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Demo: API Key가 없으므로 콘솔에 출력하고 토스트 표시
-    console.log("Contact Form Submission:", formData)
+    // 이메일 주소
+    const recipientEmail = "sooknise@naver.com"
+    
+    // 이메일 제목과 본문 구성
+    const emailSubject = encodeURIComponent(`[포트폴리오 문의] ${formData.subject}`)
+    const emailBody = encodeURIComponent(
+      `이름: ${formData.name}\n` +
+      `이메일: ${formData.email}\n\n` +
+      `메시지:\n${formData.message}`
+    )
+    
+    // mailto: 링크 생성하여 이메일 클라이언트 열기
+    const mailtoLink = `mailto:${recipientEmail}?subject=${emailSubject}&body=${emailBody}`
+    window.location.href = mailtoLink
     
     // 토스트 표시
-    showToast("문의가 접수되었습니다. (Demo)")
+    showToast("이메일 클라이언트가 열립니다.")
 
     // 폼 초기화
     setFormData({ name: "", email: "", subject: "", message: "" })
