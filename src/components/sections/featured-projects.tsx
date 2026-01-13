@@ -2,7 +2,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ExternalLink, Github } from "lucide-react"
+import { ExternalLink } from "lucide-react"
+// import { Github } from "lucide-react"; // TODO: 추후 GitHub 링크 추가 예정
 import { Tables } from "@/type/supabase"
 
 type Project = Tables<'projects'>
@@ -66,6 +67,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                       </Link>
                     </Button>
                   )}
+                  {/* TODO: 추후 GitHub 링크 추가 예정
                   {project.github_url && (
                     <Button asChild variant="outline" size="sm" className="flex-1">
                       <Link href={project.github_url} target="_blank" rel="noopener noreferrer">
@@ -74,6 +76,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
                       </Link>
                     </Button>
                   )}
+                  */}
                 </div>
               </CardContent>
             </Card>

@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Github, ExternalLink, Calendar, Users, User, Code2 } from "lucide-react";
+import { X, ExternalLink, Calendar, Users, User, Code2 } from "lucide-react";
+// import { Github } from "lucide-react"; // TODO: 추후 GitHub 링크 추가 예정
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Button } from "@/shared/ui/button";
@@ -141,6 +142,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
               {/* Footer (Links) */}
               <div className="p-4 border-t border-border/40 bg-muted/10 flex justify-end gap-3 rounded-b-xl">
+                {/* TODO: 추후 GitHub 링크 추가 예정
                 {detailInfo.links.github && (
                   <Button variant="outline" asChild>
                     <a href={detailInfo.links.github} target="_blank" rel="noopener noreferrer">
@@ -149,6 +151,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                     </a>
                   </Button>
                 )}
+                */}
                 {detailInfo.links.demo && (
                   <Button asChild>
                     <a href={detailInfo.links.demo} target="_blank" rel="noopener noreferrer">
