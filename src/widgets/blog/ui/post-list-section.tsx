@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { BlogSearch } from "@/features/blog-search/ui/blog-search";
 import { PostCard } from "@/entities/post/ui/post-card";
@@ -14,15 +14,22 @@ interface PostListSectionProps {
 export function PostListSection({ initialPosts }: PostListSectionProps) {
   const [search, setSearch] = useState("");
   
-  const filteredPosts = initialPosts.filter(post => {
+  const filteredPosts = useMemo(() => {
+    if (!search) return initialPosts;
+    
     const searchLower = search.toLowerCase();
-    
-    const matchTitle = post.title.toLowerCase().includes(searchLower);
-    const matchExcerpt = post.excerpt?.toLowerCase().includes(searchLower) || false;
-    const matchTags = post.tags?.some(tag => tag.toLowerCase().includes(searchLower)) || false;
-    
-    return matchTitle || matchExcerpt || matchTags;
-  });
+    return initialPosts.filter(post => {
+      const matchTitle = post.title.toLowerCase().includes(searchLower);
+      const matchExcerpt = post.excerpt?.toLowerCase().includes(searchLower) || false;
+      const matchTags = post.tags?.some(tag => tag.toLowerCase().includes(searchLower)) || false;
+      
+      return matchTitle || matchExcerpt || matchTags;
+    });
+  }, [initialPosts, search]);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch(value);
+  }, []);
 
   return (
     <section className="space-y-8 min-h-[60vh]">
@@ -37,7 +44,7 @@ export function PostListSection({ initialPosts }: PostListSectionProps) {
         </p>
       </motion.div>
 
-      <BlogSearch value={search} onChange={setSearch} />
+      <BlogSearch value={search} onChange={handleSearchChange} />
 
       <div className="space-y-6">
         <AnimatePresence mode="popLayout">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -17,10 +17,20 @@ interface FeaturedProjectsProps {
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   const [selectedProject, setSelectedProject] = useState<Project | Tables<'projects'> | null>(null); // ✨ 상태 관리 추가
 
-  // Featured된 프로젝트만 최대 4개 보여주기
-  const displayedProjects = projects
-    .filter(p => p.featured)
-    .slice(0, 4);
+  // Featured된 프로젝트만 최대 4개 보여주기 - useMemo로 최적화
+  const displayedProjects = useMemo(() => {
+    return projects
+      .filter(p => p.featured)
+      .slice(0, 4);
+  }, [projects]);
+
+  const handleProjectClick = useCallback((project: Project | Tables<'projects'>) => {
+    setSelectedProject(project);
+  }, []);
+
+  const handleModalClose = useCallback(() => {
+    setSelectedProject(null);
+  }, []);
 
   return (
     <section className="space-y-8">
@@ -44,7 +54,8 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
             >
               <ProjectCard 
                 project={project} 
-                onClick={() => setSelectedProject(project)} // ✨ 클릭 시 모달 열기
+                onClick={() => handleProjectClick(project)} // ✨ 클릭 시 모달 열기
+                priority={index < 2} // 첫 2개 이미지에 priority 부여 (LCP 최적화)
               />
             </motion.div>
           ))}
@@ -55,7 +66,7 @@ export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
       <ProjectModal 
         project={selectedProject} 
         isOpen={!!selectedProject} 
-        onClose={() => setSelectedProject(null)} 
+        onClose={handleModalClose} 
       />
     </section>
   );
