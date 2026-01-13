@@ -47,7 +47,7 @@ export function Header() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "relative text-sm font-medium transition-colors hover:text-primary",
+                  "relative text-sm font-medium transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md px-2 py-1",
                   pathname === item.href
                     ? "text-foreground"
                     : "text-muted-foreground"
@@ -72,8 +72,9 @@ export function Header() {
           <Link
             href="https://github.com/parksubeom" 
             target="_blank"
-            className="p-2 rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground hidden sm:block"
-            aria-label="GitHub"
+            rel="noopener noreferrer"
+            className="p-2 rounded-md hover:bg-accent transition-colors text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md hidden sm:block"
+            aria-label="GitHub 프로필로 이동"
           >
             <Github className="w-5 h-5" />
           </Link>
@@ -84,9 +85,14 @@ export function Header() {
           <div className="md:hidden ml-1">
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-9 w-9"
+                  aria-label="메뉴 열기"
+                >
                   <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
+                  <span className="sr-only">메뉴 열기</span>
                 </Button>
               </SheetTrigger>
               
@@ -120,7 +126,9 @@ export function Header() {
                     <Link
                       href="https://github.com/parksubeom"
                       target="_blank"
-                      className="flex items-center gap-2 px-2 py-3 text-muted-foreground hover:text-foreground transition-colors"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-2 py-3 text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+                      aria-label="GitHub 프로필로 이동"
                     >
                       <Github className="w-5 h-5" />
                       <span className="font-medium">GitHub</span>

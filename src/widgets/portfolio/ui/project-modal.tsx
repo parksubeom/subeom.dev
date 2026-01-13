@@ -69,7 +69,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   size="icon" 
                   onClick={onClose} 
                   className="rounded-full"
-                  aria-label="Close modal" // 접근성 라벨 추가
+                  aria-label="모달 닫기"
                 >
                   <X className="w-5 h-5" />
                 </Button>

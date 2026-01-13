@@ -27,8 +27,8 @@ export function CodeBlock({ children, className, ...props }: CodeBlockProps) {
         <span className="text-xs font-mono text-muted-foreground">{language}</span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          aria-label="코드 복사"
+          className="flex items-center gap-2 px-2 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+          aria-label={copied ? "코드 복사됨" : "코드 복사"}
         >
           {copied ? (
             <>
