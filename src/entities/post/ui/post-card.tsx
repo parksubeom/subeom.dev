@@ -61,7 +61,7 @@ export function PostCard({ post }: PostCardProps) {
           {/* ✨ 태그 리스트 수정 부분 */}
           <div className="flex flex-wrap gap-2 w-full md:w-auto md:ml-auto mt-2 md:mt-0">
             {post.tags?.map((tag) => (
-              <Badge key={tag} variant="secondary" className="text-[10px] px-2 py-0.5 font-normal bg-secondary/50 whitespace-nowrap">
+              <Badge key={tag} variant="gray" className="text-[10px] px-2 py-0.5 font-normal whitespace-nowrap">
                 {tag}
               </Badge>
             ))}

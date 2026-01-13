@@ -45,7 +45,7 @@ export function ProjectCard({ project, onClick, priority = false }: ProjectCardP
 
           {/* 카테고리 배지 */}
           <div className="absolute top-3 left-3 z-10">
-            <Badge variant="secondary" className="bg-background/80 backdrop-blur-md border-border/20 shadow-sm">
+            <Badge variant="brand" className="bg-background/80 backdrop-blur-md border-border/20 shadow-sm">
               {project.category}
             </Badge>
           </div>
@@ -64,7 +64,7 @@ export function ProjectCard({ project, onClick, priority = false }: ProjectCardP
           
           <div className="mt-auto pt-2 flex flex-wrap gap-1.5">
             {displayTechStack.slice(0, 4).map((tech) => (
-              <Badge key={tech} variant="secondary" className="text-xs font-normal border-border/50">
+              <Badge key={tech} variant="brand" className="text-xs font-normal">
                 {tech}
               </Badge>
             ))}
