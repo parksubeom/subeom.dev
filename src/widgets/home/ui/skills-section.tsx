@@ -32,8 +32,8 @@ export function SkillsSection() {
               {items.map((skill) => (
                 <Badge 
                   key={skill} 
-                  variant="secondary" 
-                  className="px-3 py-1 text-sm font-normal bg-secondary/50 hover:bg-secondary transition-colors"
+                  variant="brand" 
+                  className="px-3 py-1 text-sm font-normal"
                 >
                   {skill}
                 </Badge>

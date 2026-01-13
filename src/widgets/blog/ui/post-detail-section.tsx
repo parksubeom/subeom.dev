@@ -62,7 +62,7 @@ export function PostDetailSection({ post }: PostDetailSectionProps) {
       {/* Tags */}
       <div className="flex flex-wrap gap-2 justify-center md:justify-start">
         {post.tags?.map((tag) => (
-          <Badge key={tag} variant="secondary" className="px-3 py-1 text-sm font-normal">
+          <Badge key={tag} variant="gray" className="px-3 py-1 text-sm font-normal">
             <Tag className="w-3 h-3 mr-1.5 opacity-70" />
             {tag}
           </Badge>

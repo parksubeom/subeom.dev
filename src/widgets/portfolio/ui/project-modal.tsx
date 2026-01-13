@@ -113,7 +113,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {detailInfo.techStack.map((tech) => (
-                      <Badge key={tech} variant="secondary" className="px-3 py-1">
+                      <Badge key={tech} variant="brand" className="px-3 py-1">
                         {tech}
                       </Badge>
                     ))}
