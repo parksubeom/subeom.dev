@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import { Button } from "@/shared/ui/button";
 import { ProjectCard } from "@/entities/project/ui/project-card";
 import { ProjectModal } from "@/widgets/portfolio/ui/project-modal";
 import type { Project } from "@/entities/project/model/types";
+import { cn } from "@/shared/lib/utils";
 
 // ✨ Props 인터페이스 정의
 interface PortfolioGridProps {
@@ -43,20 +44,29 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
           </p>
         </motion.div>
 
-        {/* Category Tabs */}
-        <Tabs defaultValue="All" className="w-full" onValueChange={setActiveCategory}>
-          <TabsList className="bg-muted/50 backdrop-blur-sm p-1 inline-flex flex-wrap h-auto">
-            {categories.map((category) => (
-              <TabsTrigger 
-                key={category} 
-                value={category}
-                className="data-[state=active]:bg-background data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all"
-              >
-                {category}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        {/* Category Filter Buttons */}
+        <div 
+          role="tablist" 
+          aria-label="프로젝트 카테고리 필터"
+          className="flex flex-wrap gap-2"
+        >
+          {categories.map((category) => (
+            <Button
+              key={category}
+              variant={activeCategory === category ? "default" : "outline"}
+              onClick={() => setActiveCategory(category)}
+              role="tab"
+              aria-selected={activeCategory === category}
+              aria-controls={`category-${category}`}
+              className={cn(
+                "transition-all",
+                activeCategory === category && "bg-background text-primary shadow-sm"
+              )}
+            >
+              {category}
+            </Button>
+          ))}
+        </div>
       </div>
 
       {/* Projects Grid */}

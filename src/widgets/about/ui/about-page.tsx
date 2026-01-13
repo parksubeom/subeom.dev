@@ -76,9 +76,9 @@ export function AboutPage() {
         >
           <h1 className="text-4xl font-bold tracking-tight">About Me</h1>
           <div className="space-y-2">
-            <h2 className="text-xl font-medium text-muted-foreground">
+            <p className="text-xl font-medium text-muted-foreground">
               Frontend Developer, <span className="text-foreground font-semibold">박수범</span>
-            </h2>
+            </p>
             <p className="text-sm text-muted-foreground">
               Seoul, Korea • Available for work
             </p>
@@ -99,14 +99,14 @@ export function AboutPage() {
 
       {/* Experience Timeline */}
       <section className="space-y-8">
-        <motion.h3 
+        <motion.h2 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           className="text-2xl font-bold flex items-center gap-2"
         >
           <Briefcase className="w-6 h-6 text-primary" />
           Experience
-        </motion.h3>
+        </motion.h2>
 
         <div className="relative border-l border-border/50 ml-3 md:ml-6 space-y-12">
           {experiences.map((exp, index) => (
@@ -122,7 +122,7 @@ export function AboutPage() {
               <div className="absolute -left-[5px] top-2 w-2.5 h-2.5 rounded-full bg-primary ring-4 ring-background" />
               
               <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
-                <h4 className="text-xl font-bold">{exp.company}</h4>
+                <h3 className="text-xl font-bold">{exp.company}</h3>
                 <span className="text-sm font-mono text-muted-foreground">{exp.period}</span>
               </div>
               <div className="text-base font-medium text-primary mb-3">{exp.role}</div>
@@ -143,14 +143,14 @@ export function AboutPage() {
 
       {/* Education */}
       <section className="space-y-8">
-        <motion.h3 
+        <motion.h2 
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           className="text-2xl font-bold flex items-center gap-2"
         >
           <GraduationCap className="w-6 h-6 text-primary" />
           Education
-        </motion.h3>
+        </motion.h2>
 
         <div className="grid gap-6 md:grid-cols-2">
           {education.map((edu, index) => (
