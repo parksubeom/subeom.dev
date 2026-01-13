@@ -1,4 +1,5 @@
-import { Github, Linkedin, Mail } from "lucide-react"
+import { Github, Mail } from "lucide-react"
+// import { Linkedin } from "lucide-react" // TODO: 추후 LinkedIn 추가 예정
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -20,6 +21,7 @@ export function Footer() {
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
             </a>
+            {/* TODO: 추후 LinkedIn 추가 예정
             <a
               href="https://linkedin.com"
               target="_blank"
@@ -29,6 +31,7 @@ export function Footer() {
               <Linkedin className="h-5 w-5" />
               <span className="sr-only">LinkedIn</span>
             </a>
+            */}
             <a
               href="mailto:contact@example.com"
               className="text-muted-foreground hover:text-foreground transition-colors"
