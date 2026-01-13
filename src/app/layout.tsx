@@ -12,14 +12,19 @@ const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
+  display: "swap", // 폰트 로딩 중 텍스트 표시 유지
+  preload: true, // 폰트 우선 로딩
 });
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 900",
+  display: "swap",
+  preload: true,
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://subeom.dev'), // ✨ OG 이미지 URL 해결을 위한 base URL
   title: {
     template: "%s | Subeom.dev", // ✨ 브랜딩: 사이트 이름 변경
     default: "Subeom.dev | Frontend Developer",
@@ -36,6 +41,17 @@ export const metadata: Metadata = {
     siteName: "Subeom.dev",
     locale: "ko_KR",
     type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
