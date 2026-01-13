@@ -31,9 +31,9 @@ const badgeVariants = cva(
         purple: 
           "border-transparent bg-purple-500/15 text-purple-700 dark:text-purple-400 hover:bg-purple-500/25",
         
-        // ✨ 7. Gray (Subtle): 너무 튀지 않는 일반 태그용
+        // ✨ 7. Gray (Subtle): 너무 튀지 않는 일반 태그용 (WCAG AA 대비율 확보)
         gray: 
-          "border-transparent bg-slate-500/15 text-slate-700 dark:text-slate-400 hover:bg-slate-500/25",
+          "border-transparent bg-slate-500/15 text-slate-700 dark:text-slate-300 hover:bg-slate-500/25",
       },
     },
     defaultVariants: {
