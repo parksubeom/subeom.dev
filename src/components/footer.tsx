@@ -16,10 +16,11 @@ export function Footer() {
               href="https://github.com/parksubeom"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-2"
+              aria-label="GitHub 프로필로 이동"
             >
               <Github className="h-5 w-5" />
-              <span className="sr-only">GitHub</span>
+              <span className="sr-only">GitHub 프로필로 이동</span>
             </a>
             {/* TODO: 추후 LinkedIn 추가 예정
             <a
@@ -34,10 +35,11 @@ export function Footer() {
             */}
             <a
               href="mailto:contact@example.com"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-2"
+              aria-label="이메일 보내기"
             >
               <Mail className="h-5 w-5" />
-              <span className="sr-only">Email</span>
+              <span className="sr-only">이메일 보내기</span>
             </a>
           </div>
         </div>
