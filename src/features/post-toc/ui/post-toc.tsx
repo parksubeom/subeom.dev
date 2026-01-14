@@ -22,17 +22,32 @@ export function PostToc({ content, className }: PostTocProps) {
   useEffect(() => {
     if (typeof window === "undefined") return
 
-    const headings = Array.from(
-      document.querySelectorAll("h2, h3")
-    ) as HTMLHeadingElement[]
+    // 약간의 지연을 두어 DOM이 완전히 렌더링된 후 헤딩을 찾도록 함
+    const timeoutId = setTimeout(() => {
+      const headings = Array.from(
+        document.querySelectorAll("article h2")
+      ) as HTMLHeadingElement[]
 
-    const items: TocItem[] = headings.map((heading) => ({
-      id: heading.id || heading.textContent?.toLowerCase().replace(/\s+/g, "-") || "",
-      text: heading.textContent || "",
-      level: parseInt(heading.tagName.charAt(1)),
-    }))
+      const items: TocItem[] = headings.map((heading) => {
+        // rehype-slug가 생성한 id를 사용하거나, 없으면 텍스트 기반으로 생성
+        let id = heading.id;
+        if (!id) {
+          const text = heading.textContent || "";
+          id = text.toLowerCase().replace(/[^\w\s-]/g, "").replace(/\s+/g, "-");
+          heading.id = id;
+        }
 
-    setTocItems(items)
+        return {
+          id,
+          text: heading.textContent?.replace(/#\s*$/, "").trim() || "",
+          level: 2,
+        };
+      })
+
+      setTocItems(items)
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
   }, [content])
 
   // Intersection Observer로 현재 섹션 감지
@@ -41,14 +56,21 @@ export function PostToc({ content, className }: PostTocProps) {
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id)
-          }
-        })
+        // 가장 위에 있는 헤딩을 활성화
+        const visibleEntries = entries.filter(entry => entry.isIntersecting);
+        if (visibleEntries.length > 0) {
+          // 가장 위에 있는 요소를 찾기 위해 정렬
+          const sortedEntries = visibleEntries.sort((a, b) => {
+            const aTop = a.boundingClientRect.top;
+            const bTop = b.boundingClientRect.top;
+            return aTop - bTop;
+          });
+          setActiveId(sortedEntries[0].target.id);
+        }
       },
       {
-        rootMargin: "-20% 0% -80% 0%",
+        rootMargin: "-10% 0% -70% 0%",
+        threshold: 0,
       }
     )
 
@@ -70,7 +92,7 @@ export function PostToc({ content, className }: PostTocProps) {
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id)
     if (element) {
-      const offset = 80 // 헤더 높이 고려
+      const offset = 100 // 헤더 높이 + 여유 공간
       const elementPosition = element.getBoundingClientRect().top
       const offsetPosition = elementPosition + window.pageYOffset - offset
 
@@ -78,11 +100,17 @@ export function PostToc({ content, className }: PostTocProps) {
         top: offsetPosition,
         behavior: "smooth",
       })
+      
+      // URL 해시 업데이트 (선택사항)
+      window.history.pushState(null, "", `#${id}`)
     }
   }
 
   return (
-    <nav className={cn("sticky top-20", className)}>
+    <nav
+      aria-label="게시글 목차"
+      className={cn("sticky top-24", className)}
+    >
       <div className="space-y-2">
         <h3 className="text-sm font-semibold text-foreground mb-4">목차</h3>
         <ul className="space-y-1">
@@ -91,11 +119,10 @@ export function PostToc({ content, className }: PostTocProps) {
               <button
                 onClick={() => scrollToHeading(item.id)}
                 className={cn(
-                  "text-left text-sm transition-colors hover:text-foreground w-full",
-                  item.level === 3 && "pl-4",
+                  "text-left text-sm transition-colors hover:text-foreground w-full py-1 px-2 rounded-md -mx-2",
                   activeId === item.id
-                    ? "text-primary font-medium"
-                    : "text-muted-foreground"
+                    ? "text-primary font-medium bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground"
                 )}
               >
                 {item.text}
