@@ -1,6 +1,5 @@
 "use client";
 
-import { memo, useMemo } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ArrowRight, Folder } from "lucide-react";
@@ -15,10 +14,8 @@ interface ProjectCardProps {
   priority?: boolean; // LCP 최적화를 위한 속성 유지
 }
 
-export const ProjectCard = memo(function ProjectCard({ project, onClick, priority = false }: ProjectCardProps) {
-  const displayTechStack = useMemo(() => {
-    return ('detailInfo' in project && project.detailInfo?.techStack) || project.tech_stack || [];
-  }, [project]);
+export function ProjectCard({ project, onClick, priority = false }: ProjectCardProps) {
+  const displayTechStack = ('detailInfo' in project && project.detailInfo?.techStack) || project.tech_stack || [];
 
   return (
     <motion.div
@@ -85,4 +82,4 @@ export const ProjectCard = memo(function ProjectCard({ project, onClick, priorit
       </Card>
     </motion.div>
   );
-});
+}

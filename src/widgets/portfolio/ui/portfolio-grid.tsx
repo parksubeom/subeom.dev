@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/ui/button";
 import { ProjectCard } from "@/entities/project/ui/project-card";
@@ -17,31 +17,16 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  // 카테고리 추출 (Real Data 기반) - useMemo로 최적화
-  const categories = useMemo(() => {
-    return ["All", ...Array.from(new Set(
-      initialProjects.map((p) => p.category).filter((c): c is string => c !== null)
-    ))];
-  }, [initialProjects]);
+  // 카테고리 추출 (Real Data 기반)
+  // category가 null이 아닌 것만 추출하고 중복 제거
+  const categories = ["All", ...Array.from(new Set(
+    initialProjects.map((p) => p.category).filter((c): c is string => c !== null)
+  ))];
 
-  // 필터링 로직 - useMemo로 최적화
-  const filteredProjects = useMemo(() => {
-    return initialProjects.filter(
-      (project) => activeCategory === "All" || project.category === activeCategory
-    );
-  }, [initialProjects, activeCategory]);
-
-  const handleCategoryChange = useCallback((category: string) => {
-    setActiveCategory(category);
-  }, []);
-
-  const handleProjectClick = useCallback((project: Project) => {
-    setSelectedProject(project);
-  }, []);
-
-  const handleModalClose = useCallback(() => {
-    setSelectedProject(null);
-  }, []);
+  // 필터링 로직
+  const filteredProjects = initialProjects.filter(
+    (project) => activeCategory === "All" || project.category === activeCategory
+  );
 
   return (
     <div className="space-y-12">
@@ -69,7 +54,7 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
             <Button
               key={category}
               variant={activeCategory === category ? "default" : "outline"}
-              onClick={() => handleCategoryChange(category)}
+              onClick={() => setActiveCategory(category)}
               role="tab"
               aria-selected={activeCategory === category}
               aria-controls={`category-${category}`}
@@ -101,7 +86,7 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
             >
               <ProjectCard 
                 project={project} 
-                onClick={() => handleProjectClick(project)} 
+                onClick={() => setSelectedProject(project)} 
               />
             </motion.div>
           ))}
@@ -119,7 +104,7 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
       <ProjectModal 
         project={selectedProject} 
         isOpen={!!selectedProject} 
-        onClose={handleModalClose} 
+        onClose={() => setSelectedProject(null)} 
       />
     </div>
   );
