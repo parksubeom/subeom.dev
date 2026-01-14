@@ -24,7 +24,6 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://subeomdev.vercel.app'), // ✨ OG 이미지 URL 해결을 위한 base URL
   title: {
     template: "%s | Subeom.dev", // ✨ 브랜딩: 사이트 이름 변경
     default: "Subeom.dev | Frontend Developer",
@@ -37,29 +36,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Subeom.dev Portfolio",
     description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
-    url: "https://subeomdev.vercel.app",
+    url: "https://subeom.dev",
     siteName: "Subeom.dev",
     locale: "ko_KR",
     type: "website",
-    images: [
-      {
-        url: "/opengraph-image",
-        width: 1200,
-        height: 630,
-        alt: "Subeom.dev - Frontend & Web Accessibility",
-      },
-    ],
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
   },
 };
 

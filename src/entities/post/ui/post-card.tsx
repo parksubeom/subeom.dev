@@ -1,6 +1,5 @@
 "use client";
 
-import { memo, useMemo } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Calendar, Clock, ChevronRight, Eye } from "lucide-react";
@@ -11,14 +10,12 @@ interface PostCardProps {
   post: Post;
 }
 
-export const PostCard = memo(function PostCard({ post }: PostCardProps) {
-  const formattedDate = useMemo(() => {
-    return new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
-  }, [post.published_at, post.created_at]);
+export function PostCard({ post }: PostCardProps) {
+  const formattedDate = new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 
   return (
     <Link href={`/blog/${post.slug}`}>
@@ -73,4 +70,4 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       </motion.div>
     </Link>
   );
-});
+}
