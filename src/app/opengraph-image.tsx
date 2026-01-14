@@ -1,152 +1,87 @@
-import { ImageResponse } from "next/og";
+import type { Metadata } from "next";
+import localFont from "next/font/local";
+import "./globals.css";
 
-// 설정
-export const runtime = "edge";
-export const alt = "Subeom.dev - Frontend & Web Accessibility";
-export const size = {
-  width: 1200,
-  height: 630,
+import { Header } from "@/components/header"; 
+import { Footer } from "@/components/footer"; 
+import { ThemeProvider } from "@/components/theme-provider";
+
+const geistSans = localFont({
+  src: "./fonts/GeistVF.woff",
+  variable: "--font-geist-sans",
+  weight: "100 900",
+  display: "swap",
+  preload: true,
+});
+const geistMono = localFont({
+  src: "./fonts/GeistMonoVF.woff",
+  variable: "--font-geist-mono",
+  weight: "100 900",
+  display: "swap",
+  preload: true,
+});
+
+export const metadata: Metadata = {
+  // 1️⃣ [필수] 배포 도메인 설정 (이게 있어야 동적 이미지 URL이 완성됩니다)
+  metadataBase: new URL('https://subeomdev.vercel.app'),
+
+  title: {
+    template: "%s | Subeom.dev",
+    default: "Subeom.dev | Frontend Developer",
+  },
+  description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
+  icons: {
+    icon: "/icon", // app/icon.tsx가 있다면 자동으로 연결됩니다.
+  },
+  openGraph: {
+    title: "Subeom.dev Portfolio",
+    description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
+    url: "https://subeomdev.vercel.app",
+    siteName: "Subeom.dev",
+    locale: "ko_KR",
+    type: "website",
+    // 2️⃣ [중요] images 속성을 제거했습니다!
+    // src/app/opengraph-image.tsx 파일이 존재하면 Next.js가 자동으로 감지해서
+    // <meta property="og:image" content="..." /> 태그를 삽입합니다.
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
-export const contentType = "image/png";
 
-// 브랜드 컬러 (Hex Code 필수)
-const COLORS = {
-  background: "#0f172a", // Slate-900
-  backgroundEnd: "#1e293b", // Slate-800
-  primary: "#2A9D8F", // Teal (브랜드 컬러)
-  purple: "#a855f7", // Purple (포인트 컬러)
-  text: "#f8fafc", // Slate-50
-  muted: "#94a3b8", // Slate-400
-};
-
-export default async function Image() {
-  return new ImageResponse(
-    (
-      <div
-        style={{
-          height: "100%",
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: COLORS.background,
-          backgroundImage: `radial-gradient(circle at 25px 25px, ${COLORS.backgroundEnd} 2%, transparent 0%), linear-gradient(135deg, ${COLORS.background} 0%, ${COLORS.backgroundEnd} 100%)`,
-          backgroundSize: "100px 100px, 100% 100%",
-          fontFamily: "sans-serif",
-          position: "relative",
-          overflow: "hidden",
-        }}
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="ko" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased bg-background text-foreground`}
       >
-        {/* 배경 효과: 우측 상단 Primary Glow */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-150px",
-            right: "-150px",
-            width: "600px",
-            height: "600px",
-            background: COLORS.primary,
-            opacity: 0.15,
-            filter: "blur(120px)",
-            borderRadius: "50%",
-          }}
-        />
-        {/* 배경 효과: 좌측 하단 Purple Glow */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "-150px",
-            left: "-150px",
-            width: "500px",
-            height: "500px",
-            background: COLORS.purple,
-            opacity: 0.1,
-            filter: "blur(120px)",
-            borderRadius: "50%",
-          }}
-        />
-
-        {/* === 중앙 컨텐츠 === */}
-        <div style={{ display: "flex", alignItems: "center", gap: "48px" }}>
-          
-          {/* 1. 로고 심볼 (B) */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "160px",
-              height: "160px",
-              borderRadius: "32px",
-              background: COLORS.primary,
-              border: `2px solid rgba(255,255,255,0.1)`,
-              boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
-              position: "relative",
-            }}
-          >
-            <div
-              style={{
-                fontSize: "100px",
-                fontWeight: 900,
-                color: "white",
-                marginTop: "-8px",
-              }}
-            >
-              B
-            </div>
-            {/* 포인트 Dot */}
-            <div
-              style={{
-                position: "absolute",
-                top: "16px",
-                right: "16px",
-                width: "24px",
-                height: "24px",
-                borderRadius: "50%",
-                background: COLORS.purple,
-                boxShadow: `0 0 20px ${COLORS.purple}`,
-              }}
-            />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="flex min-h-screen flex-col relative">
+            <Header />
+            <main className="flex-1 w-full max-w-3xl mx-auto px-6 md:px-0 py-12 selection:bg-primary/20">
+              {children}
+            </main>
+            <Footer />
           </div>
-
-          {/* 2. 텍스트 정보 */}
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div
-              style={{
-                fontSize: "72px",
-                fontWeight: 800,
-                color: COLORS.text,
-                letterSpacing: "-0.03em",
-                lineHeight: 1,
-                marginBottom: "20px",
-              }}
-            >
-              subeom.dev
-            </div>
-            
-            {/* ✨ 문구 변경 부분 */}
-            <div
-              style={{
-                fontSize: "32px",
-                fontWeight: 600,
-                color: COLORS.primary,
-                display: "flex",
-                alignItems: "center",
-                gap: "16px",
-              }}
-            >
-              <span>Frontend Engineering</span>
-              <span style={{ color: COLORS.muted }}>•</span>
-              {/* 접근성을 강조하는 문구 */}
-              <span>Web Accessibility</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-    {
-      ...size,
-    }
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
