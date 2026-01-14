@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
-// ✨ FSD 구조에 맞게 경로 수정 (Header는 widgets로 이동했으므로 변경)
+// ✨ FSD 구조에 맞게 경로 수정
 import { Header } from "@/components/header";
-// Footer와 ThemeProvider는 기존 경로 유지
 import { Footer } from "@/components/footer"; 
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -12,8 +12,8 @@ const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 900",
-  display: "swap", // 폰트 로딩 중 텍스트 표시 유지
-  preload: true, // 폰트 우선 로딩
+  display: "swap",
+  preload: true,
 });
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
@@ -24,22 +24,26 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
+  // 1️⃣ [필수] OG 이미지 생성을 위한 기준 도메인 설정
+  metadataBase: new URL('https://subeomdev.vercel.app'),
+
   title: {
-    template: "%s | Subeom.dev", // ✨ 브랜딩: 사이트 이름 변경
+    template: "%s | Subeom.dev",
     default: "Subeom.dev | Frontend Developer",
   },
-  // ✅ 기존 설명 문구 유지
   description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
   icons: {
-    icon: "/icon", // ✨ 동적 파비콘 연결 (app/icon.tsx)
+    icon: "/icon", // 동적 파비콘 연결
   },
   openGraph: {
     title: "Subeom.dev Portfolio",
     description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
-    url: "https://subeom.dev",
+    // 2️⃣ [수정] 실제 배포 주소로 변경
+    url: "https://subeomdev.vercel.app",
     siteName: "Subeom.dev",
     locale: "ko_KR",
     type: "website",
+    // images: [] -> 제거함 (src/app/opengraph-image.tsx 자동 감지)
   },
 };
 
@@ -60,10 +64,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex min-h-screen flex-col relative">
-            {/* 상단 헤더 (widgets 경로) */}
+            {/* 상단 헤더 */}
             <Header />
             
-            {/* 메인 컨텐츠 영역 (중앙 정렬 & 최대 너비 제한) */}
+            {/* 메인 컨텐츠 영역 */}
             <main className="flex-1 w-full max-w-3xl mx-auto px-6 md:px-0 py-12 selection:bg-primary/20">
               {children}
             </main>
@@ -73,6 +77,9 @@ export default function RootLayout({
           </div>
         </ThemeProvider>
       </body>
+      
+      {/* 3️⃣ Google Analytics 연결 (환경변수 설정 필수) */}
+      <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID!} />
     </html>
   );
 }
