@@ -7,6 +7,7 @@ import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { PostToc } from "@/features/post-toc";
 import { ViewCounter } from "@/components/view-counter";
+import { Comments } from "@/widgets/comments";
 import type { Post } from "@/entities/post/model/types";
 // ✨ 추가됨: 마크다운 뷰어 컴포넌트 import
 import { MarkdownViewer } from "@/shared/ui/markdown-viewer"; 
@@ -103,6 +104,9 @@ export function PostDetailSection({ post }: PostDetailSectionProps) {
             )}
           </motion.div>
         </div>
+
+        {/* Comments Section */}
+        <Comments />
       </article>
     </div>
   );
