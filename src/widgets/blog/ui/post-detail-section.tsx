@@ -6,6 +6,7 @@ import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import { Button } from "@/shared/ui/button";
 import { PostToc } from "@/features/post-toc";
+import { ViewCounter } from "@/components/view-counter";
 import type { Post } from "@/entities/post/model/types";
 // ✨ 추가됨: 마크다운 뷰어 컴포넌트 import
 import { MarkdownViewer } from "@/shared/ui/markdown-viewer"; 
@@ -58,6 +59,10 @@ export function PostDetailSection({ post }: PostDetailSectionProps) {
                 <span>{post.reading_time} min read</span>
               </div>
             )}
+            <ViewCounter 
+              slug={post.slug} 
+              initialViews={post.view_count || 0}
+            />
           </motion.div>
         </div>
 
