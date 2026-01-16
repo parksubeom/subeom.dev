@@ -1,0 +1,14 @@
+perf(blog): 블로그 목록 페이지 렌더링 전략 변경 (SSR → ISR)
+
+- force-dynamic 제거하고 revalidate 60초로 설정
+- 정적 페이지 캐싱을 통한 성능 개선
+- 60초마다 백그라운드에서 자동 재생성
+
+변경 사항:
+- src/app/blog/page.tsx: force-dynamic → revalidate = 60
+- 문서 추가: blog-isr-implementation.md
+
+기대 효과:
+- 응답 속도 약 80-90% 개선 (200-500ms → 10-50ms)
+- DB 쿼리 횟수 감소 (60초마다 1회 vs 매 요청마다)
+- 서버 리소스 절감 및 트래픽 처리 능력 향상

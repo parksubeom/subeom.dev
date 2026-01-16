@@ -1,7 +1,7 @@
 import { PostListSection } from "@/widgets/blog";
 import { getPosts, getTotalPostsCount } from "@/entities/post/api/get-posts";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export const metadata = {
   title: "Blog",
