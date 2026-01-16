@@ -102,7 +102,7 @@ export function AiWorkflow() {
           AI와 경쟁하지 않고,<br className="md:hidden"/> <span className="text-primary">지휘</span>합니다.
         </h2>
         <p className="text-muted-foreground text-lg leading-relaxed max-w-3xl">
-          개발에서의 AI는 자유도보다 <strong>'제약'</strong>이 필요합니다.<br className="hidden md:block" />
+          개발에서의 AI는 자유도보다 <strong>&apos;제약&apos;</strong>이 필요합니다.<br className="hidden md:block" />
           컨텍스트를 장악하고 구현을 위임하되, 철저한 검증과 롤백 전략으로<br className="hidden md:block" />
           가장 빠르고 안전하게 요구 스펙을 달성하는 저만의 파이프라인입니다.
         </p>
