@@ -1,6 +1,8 @@
 import { PostListSection } from "@/widgets/blog";
 import { getPosts, getTotalPostsCount } from "@/entities/post/api/get-posts";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Blog",
   description: "기술 블로그",
