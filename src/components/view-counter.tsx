@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Eye } from "lucide-react";
 import { supabase } from "@/shared/lib/supabase/client";
 
@@ -12,16 +12,19 @@ interface ViewCounterProps {
 
 export function ViewCounter({ slug, initialViews, className }: ViewCounterProps) {
   const [viewCount, setViewCount] = useState<number>(initialViews);
-  const [isLoading, setIsLoading] = useState(false);
+  const hasIncremented = useRef<boolean>(false);
 
   useEffect(() => {
-    // 조회수 증가 및 최신 조회수 가져오기
+    // slug가 변경되면 리셋
+    if (hasIncremented.current) {
+      hasIncremented.current = false;
+    }
+
+    // 조회수 증가 (한 번만 실행)
     const incrementViews = async () => {
-      // 중복 호출 방지
-      if (isLoading) return;
-      
-      setIsLoading(true);
-      
+      if (hasIncremented.current) return;
+      hasIncremented.current = true;
+
       try {
         // RPC 함수 호출하여 조회수 증가 및 최신 값 가져오기
         const { data, error } = await supabase.rpc("increment_view_count", {
@@ -30,7 +33,7 @@ export function ViewCounter({ slug, initialViews, className }: ViewCounterProps)
 
         if (error) {
           console.error("조회수 증가 실패:", error);
-          // 에러 발생 시에도 초기값 유지
+          hasIncremented.current = false; // 실패 시 리셋하여 재시도 가능하게
           return;
         }
 
@@ -40,14 +43,12 @@ export function ViewCounter({ slug, initialViews, className }: ViewCounterProps)
         }
       } catch (error) {
         console.error("조회수 업데이트 중 오류:", error);
-      } finally {
-        setIsLoading(false);
+        hasIncremented.current = false; // 실패 시 리셋
       }
     };
 
     incrementViews();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slug]); // slug가 변경될 때만 실행
+  }, [slug]);
 
   // 숫자를 천 단위로 포맷팅 (예: 1234 -> "1,234")
   const formatViewCount = (count: number): string => {
