@@ -388,11 +388,6 @@ pnpm build
 4. **코드 스플리팅**: 클라이언트 컴포넌트만 동적 import
 5. **메모이제이션**: `useMemo`로 불필요한 재계산 방지
 
-## 배포
-
-이 프로젝트는 Vercel을 통해 배포할 수 있습니다:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/parksubeom/subeom.dev)
 
 ## 참고 자료
 
