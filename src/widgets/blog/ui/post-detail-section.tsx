@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo, useCallback, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -11,7 +12,7 @@ import { ViewCounter } from "@/components/view-counter";
 import { Comments } from "@/widgets/comments";
 import type { Post } from "@/entities/post/model/types";
 // ✨ 추가됨: 마크다운 뷰어 컴포넌트 import
-import { MarkdownViewer } from "@/shared/ui/markdown-viewer"; 
+import { MarkdownViewer } from "@/shared/ui/markdown-viewer";
 
 interface PostDetailSectionProps {
   post: Post;
@@ -19,17 +20,22 @@ interface PostDetailSectionProps {
 
 export function PostDetailSection({ post }: PostDetailSectionProps) {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   
-  // 날짜 포맷팅
-  const formattedDate = new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  // 날짜 포맷팅 메모이제이션
+  const formattedDate = useMemo(() => {
+    return new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }, [post.published_at, post.created_at]);
 
-  const handleTagClick = (tag: string) => {
-    router.push(`/blog?tag=${encodeURIComponent(tag)}`);
-  };
+  const handleTagClick = useCallback((tag: string) => {
+    startTransition(() => {
+      router.push(`/blog?tag=${encodeURIComponent(tag)}`);
+    });
+  }, [router]);
 
   return (
     <div className="max-w-7xl mx-auto pb-20">
@@ -80,7 +86,7 @@ export function PostDetailSection({ post }: PostDetailSectionProps) {
             <Badge
               key={tag}
               variant="gray"
-              className="px-3 py-1 text-sm font-normal cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors"
+              className={`px-3 py-1 text-sm font-normal cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors ${isPending ? "opacity-70" : ""}`}
               onClick={() => handleTagClick(tag)}
             >
               <Tag className="w-3 h-3 mr-1.5 opacity-70" />

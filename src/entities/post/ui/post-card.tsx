@@ -1,5 +1,6 @@
 "use client";
 
+import { memo, useMemo, useCallback, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -11,19 +12,25 @@ interface PostCardProps {
   post: Post;
 }
 
-export function PostCard({ post }: PostCardProps) {
+export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const router = useRouter();
-  const formattedDate = new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+  const [isPending, startTransition] = useTransition();
+  
+  const formattedDate = useMemo(() => {
+    return new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  }, [post.published_at, post.created_at]);
 
-  const handleTagClick = (e: React.MouseEvent, tag: string) => {
+  const handleTagClick = useCallback((e: React.MouseEvent, tag: string) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/blog?tag=${encodeURIComponent(tag)}`);
-  };
+    startTransition(() => {
+      router.push(`/blog?tag=${encodeURIComponent(tag)}`);
+    });
+  }, [router]);
 
   return (
     <Link href={`/blog/${post.slug}`}>
@@ -72,7 +79,7 @@ export function PostCard({ post }: PostCardProps) {
               <Badge
                 key={tag}
                 variant="gray"
-                className="text-[10px] px-2 py-0.5 font-normal whitespace-nowrap cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors"
+                className={`text-[10px] px-2 py-0.5 font-normal whitespace-nowrap cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors ${isPending ? "opacity-70" : ""}`}
                 onClick={(e) => handleTagClick(e, tag)}
               >
                 {tag}
@@ -83,4 +90,4 @@ export function PostCard({ post }: PostCardProps) {
       </motion.div>
     </Link>
   );
-}
+});

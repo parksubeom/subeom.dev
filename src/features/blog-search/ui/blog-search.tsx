@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/shared/ui/input";
 
@@ -8,7 +9,7 @@ interface BlogSearchProps {
   onChange: (value: string) => void;
 }
 
-export function BlogSearch({ value, onChange }: BlogSearchProps) {
+export const BlogSearch = memo(function BlogSearch({ value, onChange }: BlogSearchProps) {
   return (
     <div className="relative mb-8">
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -21,4 +22,4 @@ export function BlogSearch({ value, onChange }: BlogSearchProps) {
       />
     </div>
   );
-}
+});
