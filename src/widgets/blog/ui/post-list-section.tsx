@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback, useTransition, memo, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { BlogSearch } from "@/features/blog-search/ui/blog-search";
@@ -8,7 +8,24 @@ import { PostCard } from "@/entities/post/ui/post-card";
 import { Button } from "@/shared/ui/button";
 import { Badge } from "@/shared/ui/badge";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useDebounce } from "@/shared/hooks/use-debounce";
 import type { Post } from "@/entities/post/model/types";
+
+// 헤더 컴포넌트 - 정적 콘텐츠이므로 메모이제이션
+const BlogHeader = memo(function BlogHeader() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="space-y-4"
+    >
+      <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
+      <p className="text-muted-foreground text-lg">
+        개발 경험과 기술적인 고민들을 기록합니다.
+      </p>
+    </motion.div>
+  );
+});
 
 // Props로 posts를 받도록 수정
 interface PostListSectionProps {
@@ -23,48 +40,77 @@ interface PostListSectionProps {
 export function PostListSection({ initialPosts, currentPage, totalPages, selectedTag, allTags, allPosts }: PostListSectionProps) {
   const [search, setSearch] = useState("");
   const [searchPage, setSearchPage] = useState(1);
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const searchParams = useSearchParams();
   
+  // 검색어 debounce (300ms 지연)
+  const debouncedSearch = useDebounce(search, 300);
+  
   // 검색어가 변경되면 검색 페이지를 1로 리셋
-  const handleSearchChange = (value: string) => {
-    setSearch(value);
-    if (value.trim().length === 0) {
-      setSearchPage(1);
-    } else if (search.trim().length === 0 && value.trim().length > 0) {
+  // search 의존성 제거하여 함수가 재생성되지 않도록 최적화
+  const handleSearchChange = useCallback((value: string) => {
+    setSearch((prevSearch) => {
+      // 이전 검색어가 비어있고 새 검색어가 있으면 페이지 리셋
+      if (prevSearch.trim().length === 0 && value.trim().length > 0) {
+        setSearchPage(1);
+      } else if (value.trim().length === 0) {
+        setSearchPage(1);
+      }
+      return value;
+    });
+  }, []);
+  
+  // debouncedSearch가 변경될 때만 검색 페이지 리셋
+  useEffect(() => {
+    if (debouncedSearch.trim().length > 0 && search.trim().length > 0) {
       setSearchPage(1);
     }
-  };
+  }, [debouncedSearch, search]);
   
   // 검색어가 있을 때는 allPosts를 사용, 없을 때는 initialPosts 사용
-  const postsToFilter = search.trim().length > 0 && allPosts ? allPosts : initialPosts;
+  // debouncedSearch를 사용하여 타이핑 중에는 필터링하지 않음
+  const postsToFilter = useMemo(() => {
+    return debouncedSearch.trim().length > 0 && allPosts ? allPosts : initialPosts;
+  }, [debouncedSearch, allPosts, initialPosts]);
   
-  const filteredPosts = postsToFilter.filter(post => {
-    const searchLower = search.toLowerCase();
+  // 필터링 결과 메모이제이션 (debouncedSearch 사용)
+  const filteredPosts = useMemo(() => {
+    if (!debouncedSearch.trim()) return postsToFilter;
     
-    const matchTitle = post.title.toLowerCase().includes(searchLower);
-    const matchExcerpt = post.excerpt?.toLowerCase().includes(searchLower) || false;
-    const matchTags = post.tags?.some(tag => tag.toLowerCase().includes(searchLower)) || false;
-    
-    return matchTitle || matchExcerpt || matchTags;
-  });
+    const searchLower = debouncedSearch.toLowerCase();
+    return postsToFilter.filter(post => {
+      const matchTitle = post.title.toLowerCase().includes(searchLower);
+      const matchExcerpt = post.excerpt?.toLowerCase().includes(searchLower) || false;
+      const matchTags = post.tags?.some(tag => tag.toLowerCase().includes(searchLower)) || false;
+      
+      return matchTitle || matchExcerpt || matchTags;
+    });
+  }, [postsToFilter, debouncedSearch]);
 
   // 검색어가 있을 때는 필터링된 결과를 기반으로 클라이언트 사이드 페이지네이션
   // 검색어가 없을 때는 서버에서 받은 totalPages 사용
-  const hasSearchQuery = search.trim().length > 0;
+  // debouncedSearch를 사용하여 실제 필터링은 타이핑이 끝난 후에만 실행
+  const hasSearchQuery = debouncedSearch.trim().length > 0;
   const limit = 5;
-  const searchTotalPages = Math.ceil(filteredPosts.length / limit);
-  const searchCurrentPage = hasSearchQuery ? searchPage : currentPage;
-  const searchStartIndex = (searchCurrentPage - 1) * limit;
-  const searchEndIndex = searchStartIndex + limit;
-  const paginatedFilteredPosts = hasSearchQuery 
-    ? filteredPosts.slice(searchStartIndex, searchEndIndex)
-    : filteredPosts;
   
-  const effectiveTotalPages = hasSearchQuery ? searchTotalPages : totalPages;
-  const effectiveCurrentPage = hasSearchQuery ? searchCurrentPage : currentPage;
+  const { paginatedFilteredPosts, effectiveTotalPages, effectiveCurrentPage } = useMemo(() => {
+    const searchTotalPages = Math.ceil(filteredPosts.length / limit);
+    const searchCurrentPage = hasSearchQuery ? searchPage : currentPage;
+    const searchStartIndex = (searchCurrentPage - 1) * limit;
+    const searchEndIndex = searchStartIndex + limit;
+    const paginatedFilteredPosts = hasSearchQuery 
+      ? filteredPosts.slice(searchStartIndex, searchEndIndex)
+      : filteredPosts;
+    
+    return {
+      paginatedFilteredPosts,
+      effectiveTotalPages: hasSearchQuery ? searchTotalPages : totalPages,
+      effectiveCurrentPage: searchCurrentPage,
+    };
+  }, [filteredPosts, hasSearchQuery, searchPage, currentPage, totalPages, limit]);
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = useCallback((page: number) => {
     if (hasSearchQuery) {
       // 검색어가 있을 때는 클라이언트 사이드 페이지네이션만 업데이트
       setSearchPage(page);
@@ -80,43 +126,46 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
     }
     router.push(`/blog?${params.toString()}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }, [hasSearchQuery, searchParams, router]);
 
-  const handleTagClick = (tag: string) => {
-    const params = new URLSearchParams();
-    if (selectedTag === tag) {
-      // 같은 태그를 다시 클릭하면 필터 해제
+  const handleTagClick = useCallback((tag: string) => {
+    startTransition(() => {
+      const params = new URLSearchParams();
+      if (selectedTag === tag) {
+        // 같은 태그를 다시 클릭하면 필터 해제
+        params.delete("tag");
+      } else {
+        params.set("tag", tag);
+      }
+      params.delete("page"); // tag 변경 시 첫 페이지로
+      router.push(`/blog?${params.toString()}`);
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [selectedTag, router]);
+
+  const handleRemoveTag = useCallback(() => {
+    startTransition(() => {
+      const params = new URLSearchParams(searchParams.toString());
       params.delete("tag");
-    } else {
-      params.set("tag", tag);
-    }
-    params.delete("page"); // tag 변경 시 첫 페이지로
-    router.push(`/blog?${params.toString()}`);
+      params.delete("page"); // tag 변경 시 첫 페이지로
+      router.push(`/blog?${params.toString()}`);
+    });
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  }, [searchParams, router]);
 
-  const handleRemoveTag = () => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("tag");
-    params.delete("page"); // tag 변경 시 첫 페이지로
-    router.push(`/blog?${params.toString()}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
+  // 헤더와 검색창을 useMemo로 메모이제이션하여 불필요한 리렌더링 방지
+  const headerMemo = useMemo(() => <BlogHeader />, []);
+  const searchMemo = useMemo(
+    () => <BlogSearch value={search} onChange={handleSearchChange} />,
+    [search, handleSearchChange]
+  );
 
   return (
     <section className="space-y-8 min-h-[60vh]">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="space-y-4"
-      >
-        <h1 className="text-4xl font-bold tracking-tight">Blog</h1>
-        <p className="text-muted-foreground text-lg">
-          개발 경험과 기술적인 고민들을 기록합니다.
-        </p>
-      </motion.div>
+      {/* 헤더 - 정적 콘텐츠이므로 필터 변경 시 리렌더링되지 않음 */}
+      {headerMemo}
 
-      <BlogSearch value={search} onChange={handleSearchChange} />
+      {searchMemo}
 
       {/* 모든 태그 목록 */}
       {allTags.length > 0 && (
@@ -130,7 +179,8 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
             {selectedTag && (
               <button
                 onClick={handleRemoveTag}
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 self-start sm:self-auto touch-manipulation"
+                disabled={isPending}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1 self-start sm:self-auto touch-manipulation disabled:opacity-50 disabled:cursor-not-allowed"
                 aria-label="필터 초기화"
               >
                 <X className="w-3.5 h-3.5" />
@@ -149,7 +199,7 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
                     isSelected
                       ? "bg-primary text-primary-foreground hover:bg-primary/90 active:bg-primary/80"
                       : "hover:bg-primary/10 hover:text-primary active:bg-primary/20"
-                  }`}
+                  } ${isPending ? "opacity-70 pointer-events-none" : ""}`}
                   onClick={() => handleTagClick(tag)}
                   role="button"
                   tabIndex={0}
