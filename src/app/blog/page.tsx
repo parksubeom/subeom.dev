@@ -1,7 +1,8 @@
 import { PostListSection } from "@/widgets/blog";
 import { getPosts, getTotalPostsCount } from "@/entities/post/api/get-posts";
 
-export const revalidate = 60;
+// 개발 환경에서는 캐시 없이 최신 데이터 사용, 프로덕션에서는 60초 ISR
+export const revalidate = process.env.NODE_ENV === "development" ? 0 : 60;
 
 export const metadata = {
   title: "Blog",
