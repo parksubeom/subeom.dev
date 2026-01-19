@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Calendar, Clock, ChevronRight, Eye } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
@@ -11,11 +12,18 @@ interface PostCardProps {
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const router = useRouter();
   const formattedDate = new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   });
+
+  const handleTagClick = (e: React.MouseEvent, tag: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/blog?tag=${encodeURIComponent(tag)}`);
+  };
 
   return (
     <Link href={`/blog/${post.slug}`}>
@@ -58,10 +66,15 @@ export function PostCard({ post }: PostCardProps) {
              </div>
           )}
 
-          {/* ✨ 태그 리스트 수정 부분 */}
+          {/* ✨ 태그 리스트 - 클릭 시 해당 tag로 필터링 */}
           <div className="flex flex-wrap gap-2 w-full md:w-auto md:ml-auto mt-2 md:mt-0">
             {post.tags?.map((tag) => (
-              <Badge key={tag} variant="gray" className="text-[10px] px-2 py-0.5 font-normal whitespace-nowrap">
+              <Badge
+                key={tag}
+                variant="gray"
+                className="text-[10px] px-2 py-0.5 font-normal whitespace-nowrap cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors"
+                onClick={(e) => handleTagClick(e, tag)}
+              >
                 {tag}
               </Badge>
             ))}
