@@ -3,6 +3,9 @@ import { PostDetailSection } from "@/widgets/blog/ui/post-detail-section";
 import { getAllPostSlugs } from "@/entities/post/api/get-all-post-slugs";
 import { getPostBySlug } from "@/entities/post/api/get-post-by-slug";
 
+// 개발 환경에서는 캐시 없이 최신 데이터 사용, 프로덕션에서는 60초 ISR
+export const revalidate = process.env.NODE_ENV === "development" ? 0 : 60;
+
 interface Props {
   params: {
     slug: string;
