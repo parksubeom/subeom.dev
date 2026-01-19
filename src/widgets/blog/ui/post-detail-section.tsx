@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, Clock, Tag } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
@@ -17,12 +18,18 @@ interface PostDetailSectionProps {
 }
 
 export function PostDetailSection({ post }: PostDetailSectionProps) {
+  const router = useRouter();
+  
   // 날짜 포맷팅
   const formattedDate = new Date(post.published_at || post.created_at).toLocaleDateString("ko-KR", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+
+  const handleTagClick = (tag: string) => {
+    router.push(`/blog?tag=${encodeURIComponent(tag)}`);
+  };
 
   return (
     <div className="max-w-7xl mx-auto pb-20">
@@ -70,7 +77,12 @@ export function PostDetailSection({ post }: PostDetailSectionProps) {
         {/* Tags */}
         <div className="flex flex-wrap gap-2 justify-center md:justify-start">
           {post.tags?.map((tag) => (
-            <Badge key={tag} variant="gray" className="px-3 py-1 text-sm font-normal">
+            <Badge
+              key={tag}
+              variant="gray"
+              className="px-3 py-1 text-sm font-normal cursor-pointer hover:bg-primary/10 hover:text-primary transition-colors"
+              onClick={() => handleTagClick(tag)}
+            >
               <Tag className="w-3 h-3 mr-1.5 opacity-70" />
               {tag}
             </Badge>
