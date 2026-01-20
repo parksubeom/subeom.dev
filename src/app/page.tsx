@@ -20,7 +20,7 @@ export default async function Home() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "박수범",
-    alternateName: "Subeom Park",
+    alternateName: ["Subeom Park", "subeom.dev", "subeomdev"],
     jobTitle: "Frontend Developer",
     description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자",
     url: baseUrl,
