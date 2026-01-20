@@ -13,22 +13,57 @@ export default async function Home() {
     getRecentPosts(3), 
   ]);
 
-  return (
-    <div className="space-y-32 pb-24">
-      {/* Hero */}
-      <HeroSection />
-      
-      {/* AI kills  */}
-      <AiWorkflow />
-      
-      {/* Skills */}
-      <SkillsSection />
+  const baseUrl = "https://subeomdev.vercel.app";
 
-      {/* Featured Projects */}
-      <FeaturedProjects projects={projects} />
-      
-      {/* Latest Articles */}
-      <LatestArticles posts={recentPosts} />
-    </div>
+  // Person JSON-LD 구조화된 데이터
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "박수범",
+    alternateName: "Subeom Park",
+    jobTitle: "Frontend Developer",
+    description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자",
+    url: baseUrl,
+    sameAs: [
+      "https://github.com/parksubeom",
+      // 추가 SNS 링크가 있다면 여기에 추가
+    ],
+    knowsAbout: [
+      "Frontend Development",
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Web Development",
+    ],
+    alumniOf: {
+      "@type": "Organization",
+      name: "프론트엔드 개발자",
+    },
+  };
+
+  return (
+    <>
+      {/* JSON-LD 구조화된 데이터 */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
+      <div className="space-y-32 pb-24">
+        {/* Hero */}
+        <HeroSection />
+        
+        {/* AI kills  */}
+        <AiWorkflow />
+        
+        {/* Skills */}
+        <SkillsSection />
+
+        {/* Featured Projects */}
+        <FeaturedProjects projects={projects} />
+
+        {/* Latest Articles */}
+        <LatestArticles posts={recentPosts} />
+      </div>
+    </>
   );
 }

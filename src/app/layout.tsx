@@ -32,8 +32,29 @@ export const metadata: Metadata = {
     default: "Subeom.dev | Frontend Developer",
   },
   description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
+  keywords: [
+    "프론트엔드 개발자",
+    "Frontend Developer",
+    "React",
+    "Next.js",
+    "TypeScript",
+    "포트폴리오",
+    "포트폴리오 사이트",
+    "웹 개발",
+    "박수범",
+    "Subeom.dev",
+  ],
+  authors: [{ name: "박수범", url: "https://subeomdev.vercel.app" }],
+  creator: "박수범",
+  publisher: "박수범",
   icons: {
     icon: "/icon", // 동적 파비콘 연결
+  },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
+    other: {
+      "naver-site-verification": process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION || "",
+    },
   },
   openGraph: {
     title: "Subeom.dev Portfolio",
@@ -44,6 +65,13 @@ export const metadata: Metadata = {
     locale: "ko_KR",
     type: "website",
     // images: [] -> 제거함 (src/app/opengraph-image.tsx 자동 감지)
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Subeom.dev Portfolio",
+    description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
+    creator: "@sooknise",
+    site: "@sooknise",
   },
 };
 
