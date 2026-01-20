@@ -30,15 +30,47 @@ export async function generateMetadata({ params }: Props) {
     };
   }
 
+  const baseUrl = "https://subeomdev.vercel.app";
+  const postUrl = `${baseUrl}/blog/${post.slug}`;
+  const ogImage = post.thumbnail_url 
+    ? `${baseUrl}${post.thumbnail_url}` 
+    : `${baseUrl}/opengraph-image`;
+  
   return {
     title: post.title,
     description: post.excerpt || post.title,
+    keywords: post.tags || [],
+    authors: [{ name: "박수범", url: baseUrl }],
+    alternates: {
+      canonical: postUrl,
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt || post.title,
+      url: postUrl,
+      siteName: "Subeom.dev",
+      locale: "ko_KR",
       type: "article",
       publishedTime: post.published_at || post.created_at,
-      authors: ["Subeom Park"],
+      modifiedTime: post.updated_at || post.published_at || post.created_at,
+      authors: ["박수범"],
+      tags: post.tags || [],
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt || post.title,
+      creator: "@sooknise",
+      site: "@sooknise",
+      images: [ogImage],
     },
   };
 }
@@ -51,5 +83,48 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
-  return <PostDetailSection post={post} />;
+  const baseUrl = "https://subeomdev.vercel.app";
+  const postUrl = `${baseUrl}/blog/${post.slug}`;
+  const ogImage = post.thumbnail_url 
+    ? `${baseUrl}${post.thumbnail_url}` 
+    : `${baseUrl}/opengraph-image`;
+
+  // BlogPosting JSON-LD 구조화된 데이터
+  const blogPostingJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt || post.title,
+    image: ogImage,
+    datePublished: post.published_at || post.created_at,
+    dateModified: post.updated_at || post.published_at || post.created_at,
+    author: {
+      "@type": "Person",
+      name: "박수범",
+      url: baseUrl,
+    },
+    publisher: {
+      "@type": "Person",
+      name: "박수범",
+      url: baseUrl,
+    },
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": postUrl,
+    },
+    keywords: post.tags?.join(", ") || "",
+    articleSection: "Blog",
+    inLanguage: "ko-KR",
+  };
+
+  return (
+    <>
+      {/* JSON-LD 구조화된 데이터 */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogPostingJsonLd) }}
+      />
+      <PostDetailSection post={post} />
+    </>
+  );
 }
