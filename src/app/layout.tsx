@@ -28,8 +28,8 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://subeomdev.vercel.app'),
 
   title: {
-    template: "%s | Subeom.dev",
-    default: "Subeom.dev | Frontend Developer",
+    template: "%s | subeom.dev",
+    default: "subeom.dev | Frontend Developer",
   },
   description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
   keywords: [
@@ -42,6 +42,9 @@ export const metadata: Metadata = {
     "포트폴리오 사이트",
     "웹 개발",
     "박수범",
+    "subeom.dev",
+    "subeom dev",
+    "subeomdev",
     "Subeom.dev",
   ],
   authors: [{ name: "박수범", url: "https://subeomdev.vercel.app" }],
@@ -57,18 +60,18 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "Subeom.dev Portfolio",
+    title: "subeom.dev Portfolio",
     description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
     // 2️⃣ [수정] 실제 배포 주소로 변경
     url: "https://subeomdev.vercel.app",
-    siteName: "Subeom.dev",
+    siteName: "subeom.dev",
     locale: "ko_KR",
     type: "website",
     // images: [] -> 제거함 (src/app/opengraph-image.tsx 자동 감지)
   },
   twitter: {
     card: "summary_large_image",
-    title: "Subeom.dev Portfolio",
+    title: "subeom.dev Portfolio",
     description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
     creator: "@sooknise",
     site: "@sooknise",

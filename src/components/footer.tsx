@@ -9,7 +9,7 @@ export function Footer() {
       <div className="max-w-screen-xl mx-auto px-6 md:px-12 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} 포트폴리오. All rights reserved.
+            © {currentYear} subeom.dev. All rights reserved.
           </p>
           <div className="flex items-center space-x-4">
             <a
