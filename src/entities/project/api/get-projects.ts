@@ -7,7 +7,7 @@ export async function getProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from("projects")
     .select("*")
-    .order("order", { ascending: true }); // 순서대로 정렬
+    .order("created_at", { ascending: false }); // 최신 순으로 정렬
 
   if (error) {
     console.error("Error fetching projects:", error);
