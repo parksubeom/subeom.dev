@@ -1,4 +1,5 @@
 import { Github, Mail } from "lucide-react"
+import { PROFILE } from "@/shared/config/profile"
 // import { Linkedin } from "lucide-react" // TODO: 추후 LinkedIn 추가 예정
 
 export function Footer() {
@@ -34,7 +35,7 @@ export function Footer() {
             </a>
             */}
             <a
-              href="mailto:contact@example.com"
+              href={`mailto:${PROFILE.email}`}
               className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-2"
               aria-label="이메일 보내기"
             >

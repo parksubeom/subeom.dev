@@ -115,23 +115,10 @@ const handleCopyEmail = () => {
 }
 ```
 
-#### 3.3 Contact Form Feature (`src/features/contact`)
+#### 3.3 Contact Closing Section (우측)
 
-**FSD 구조:**
-- **Feature 레이어**: `src/features/contact/ui/contact-form.tsx`
-- **재사용 가능한 기능**: 다른 페이지에서도 사용 가능
-
-**폼 필드:**
-- 이름 (text)
-- 이메일 (email)
-- 제목 (text)
-- 메시지 (textarea)
-
-**구현 특징:**
-- 클라이언트 컴포넌트 (`"use client"`)
-- 폼 상태 관리 (useState)
-- 제출 시 콘솔 출력 + 토스트 메시지 (Demo 모드)
-- API Key가 없으므로 실제 전송은 구현하지 않음
+- 메일 작성 폼은 제거하고, 우측 영역에 **마무리 소개/가치관/함께하고 싶은 팀**을 텍스트로 제공합니다.
+- 연락은 좌측 Contact Info의 이메일(`mailto:`) 및 GitHub로 유도합니다.
 
 **토스트 구현 (간단 버전):**
 ```typescript
