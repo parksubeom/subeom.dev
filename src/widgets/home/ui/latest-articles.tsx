@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/shared/ui/button";
@@ -10,7 +11,7 @@ interface LatestArticlesProps {
   posts: Post[];
 }
 
-export function LatestArticles({ posts }: LatestArticlesProps) {
+export const LatestArticles = memo(function LatestArticles({ posts }: LatestArticlesProps) {
   // 💡 수정 사항: 
   // 1. slice(0, 2)를 제거하여 부모 컴포넌트에서 넘겨준 개수(3개)만큼 그대로 보여줍니다.
   // 2. 만약 여기서 강제로 개수를 자르고 싶다면 posts.slice(0, 3)으로 변경하세요.
@@ -46,4 +47,4 @@ export function LatestArticles({ posts }: LatestArticlesProps) {
       </div>
     </section>
   );
-}
+});
