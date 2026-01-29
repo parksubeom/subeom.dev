@@ -1,12 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/ui/button";
 import { ProjectCard } from "@/entities/project/ui/project-card";
-import { ProjectModal } from "@/widgets/portfolio/ui/project-modal";
 import type { Project } from "@/entities/project/model/types";
 import { cn } from "@/shared/lib/utils";
+
+// 동적 import로 코드 스플리팅 - 모달은 필요할 때만 로드
+const ProjectModal = dynamic(
+  () => import("@/widgets/portfolio/ui/project-modal").then(mod => ({ default: mod.ProjectModal })),
+  { ssr: false }
+);
 
 // ✨ Props 인터페이스 정의
 interface PortfolioGridProps {
@@ -17,16 +23,32 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
-  // 카테고리 추출 (Real Data 기반)
-  // category가 null이 아닌 것만 추출하고 중복 제거
-  const categories = ["All", ...Array.from(new Set(
-    initialProjects.map((p) => p.category).filter((c): c is string => c !== null)
-  ))];
+  // 카테고리 추출 (Real Data 기반) - useMemo로 최적화
+  const categories = useMemo(() => {
+    return ["All", ...Array.from(new Set(
+      initialProjects.map((p) => p.category).filter((c): c is string => c !== null)
+    ))];
+  }, [initialProjects]);
 
-  // 필터링 로직
-  const filteredProjects = initialProjects.filter(
-    (project) => activeCategory === "All" || project.category === activeCategory
-  );
+  // 필터링 로직 - useMemo로 최적화
+  const filteredProjects = useMemo(() => {
+    return initialProjects.filter(
+      (project) => activeCategory === "All" || project.category === activeCategory
+    );
+  }, [initialProjects, activeCategory]);
+
+  // 핸들러 메모이제이션
+  const handleCategoryChange = useCallback((category: string) => {
+    setActiveCategory(category);
+  }, []);
+
+  const handleProjectClick = useCallback((project: Project) => {
+    setSelectedProject(project);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setSelectedProject(null);
+  }, []);
 
   return (
     <div className="space-y-12">
@@ -54,7 +76,7 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
             <Button
               key={category}
               variant={activeCategory === category ? "default" : "outline"}
-              onClick={() => setActiveCategory(category)}
+              onClick={() => handleCategoryChange(category)}
               role="tab"
               aria-selected={activeCategory === category}
               aria-controls={`category-${category}`}
@@ -86,7 +108,7 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
             >
               <ProjectCard 
                 project={project} 
-                onClick={() => setSelectedProject(project)} 
+                onClick={() => handleProjectClick(project)} 
               />
             </motion.div>
           ))}
@@ -104,7 +126,7 @@ export function PortfolioGrid({ initialProjects }: PortfolioGridProps) {
       <ProjectModal 
         project={selectedProject} 
         isOpen={!!selectedProject} 
-        onClose={() => setSelectedProject(null)} 
+        onClose={handleCloseModal} 
       />
     </div>
   );
