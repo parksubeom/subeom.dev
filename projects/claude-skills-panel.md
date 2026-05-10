@@ -11,11 +11,17 @@ tech_stack:
   - GitHub Actions
 github_url: "https://github.com/parksubeom/claude-skills-panel"
 demo_url: "https://open-vsx.org/extension/parksubeom/claude-skills-panel"
-thumbnail_url: "https://open-vsx.org/api/parksubeom/claude-skills-panel/0.44.6/file/icon.png"
+thumbnail_url: "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/panel-main.png"
 images:
-  - "https://open-vsx.org/api/parksubeom/claude-skills-panel/0.44.6/file/icon.png"
   - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/panel-main.png"
+  - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/panel-bottom.png"
   - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-card-click.gif"
+  - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-exec-mode.gif"
+  - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-edit-modal.gif"
+  - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-theme.gif"
+  - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-locale.gif"
+  - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/buddy-lineup.png"
+  - "https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/buddy-lineup-full.png"
 featured: true
 order: 1
 start_date: "2026-05-03"
@@ -38,18 +44,43 @@ detailInfo:
     - GitHub Actions
     - ffmpeg + gifski
   sections:
+    - title: "스크린샷"
+      content: |
+        **메인 패널 뷰**
+
+        ![Activity Bar 메인 패널](https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/panel-main.png)
+
+        Activity Bar에 도킹된 메인 패널. 자동 디스커버리된 슬래시 커맨드들이 카드 그리드로 표시됩니다.
+
+        **하단 패널 뷰 (IDE 사용자용)**
+
+        ![Bottom Panel 뷰](https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/panel-bottom.png)
+
+        IDE 환경에서는 하단 패널에 가로 레이아웃으로 노출됩니다.
     - title: "주요 기능"
       content: |
         **1. 자동 디스커버리**
         `~/.claude/skills/`, `commands/`, `plugins/cache/<marketplace>/<plugin>/<version>/`를 재귀 스캔해 모든 슬래시 커맨드를 자동 노출. 플러그인별 출처(예: `🧩 superpowers @claude-plugins-official`)가 카드 hover에 표시됩니다.
 
         **2. 3가지 실행 모드**
+
+        ![3가지 실행 모드 데모](https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-exec-mode.gif)
+
         - `▶ Paste`: 클립보드 복사 후 활성 입력창에 자동 붙여넣기
         - `▶💬 Term`: 활성 터미널로 직접 전송, 카드별 프롬프트 템플릿(`{cmd}` 플레이스홀더) 지원
         - 초기 `▶ Auto` 모드는 React 입력 컴포넌트와 충돌이 잦아 v0.39에서 제거
 
         **3. 개인화 / 커스터마이징**
-        카드별 별칭·노트·아이콘·그룹·프롬프트 템플릿·숨김 처리, 6슬롯 Quick Bar(드래그&드롭 + 단축키 1–6), 설정 export/import(JSON 클립보드 동기화), 3 테마(Dark/Retro/LCD) · 4 언어(en/ko/ja/zh) 토글.
+
+        ![카드 편집 모달](https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-edit-modal.gif)
+
+        카드별 별칭·노트·아이콘·그룹·프롬프트 템플릿·숨김 처리, 6슬롯 Quick Bar(드래그&드롭 + 단축키 1–6), 설정 export/import(JSON 클립보드 동기화).
+
+        ![3테마 토글](https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-theme.gif)
+
+        3 테마(Dark / Retro CRT / Gameboy LCD) 토글 + 4 언어(en/ko/ja/zh) 토글.
+
+        ![다국어 데모](https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/demo-locale.gif)
 
         **4. 토큰 사용량 추적 (opt-in)**
         `~/.claude/projects/*.jsonl`의 `message.usage` 필드만 incremental 파싱. `<command-name>` 마커와 `uuid`/`parentUuid` 체인을 따라 슬래시 커맨드별 사용량을 귀속시켜 `22.6M tok/run` 형태로 회당 평균을 표시. **프롬프트/응답 본문은 일절 읽지 않으며 모든 데이터는 메모리에만 보존**.
@@ -58,7 +89,14 @@ detailInfo:
         등록된 모든 마켓플레이스의 카탈로그를 모달에서 통합 검색. `/plugin install <name>@<marketplace>` 명령을 현재 실행 모드로 원클릭 발사.
 
         **6. 픽셀 게이미피케이션 (Buddy Yard)**
-        사용자의 슬래시 커맨드 사용 패턴이 곧 RPG 클래스(검사/닌자/마법사 등 10종)로 결정. LV.1 견습 → LV.5 전설 5단계 성장. Claude가 작업 중일 때 사이드 스크롤러식 몬스터 배틀 연출(클래스별 공격 이펙트·데미지 숫자·크리티컬). 작업 완료 시 8-bit 3-tone 차임.
+
+        ![Buddy Yard - RPG 클래스 라인업](https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/buddy-lineup.png)
+
+        사용자의 슬래시 커맨드 사용 패턴이 곧 RPG 클래스(검사/닌자/마법사 등 10종)로 결정. LV.1 견습 → LV.5 전설 5단계 성장.
+
+        ![Buddy Yard 풀 라인업](https://raw.githubusercontent.com/parksubeom/claude-skills-panel/main/docs/screenshots/buddy-lineup-full.png)
+
+        Claude가 작업 중일 때 사이드 스크롤러식 몬스터 배틀 연출(클래스별 공격 이펙트·데미지 숫자·크리티컬). 작업 완료 시 8-bit 3-tone 차임.
     - title: "기술적 도전 & 트러블슈팅"
       content: |
         **1. JSONL 토큰 추적: `promptId` → UUID 체인 (v0.44.5)**
