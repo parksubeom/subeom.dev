@@ -2,6 +2,8 @@ import { notFound } from "next/navigation";
 import { PostDetailSection } from "@/widgets/blog/ui/post-detail-section";
 import { getAllPostSlugs } from "@/entities/post/api/get-all-post-slugs";
 import { getPostBySlug } from "@/entities/post/api/get-post-by-slug";
+import { SITE_URL, SITE_NAME, SITE_LOCALE, TWITTER_HANDLE } from "@/shared/config/site";
+import { PROFILE } from "@/shared/config/profile";
 
 // 개발 환경에서는 캐시 없이 최신 데이터 사용, 프로덕션에서는 60초 ISR
 export const revalidate = process.env.NODE_ENV === "development" ? 0 : 60;
@@ -30,17 +32,16 @@ export async function generateMetadata({ params }: Props) {
     };
   }
 
-  const baseUrl = "https://subeomdev.vercel.app";
-  const postUrl = `${baseUrl}/blog/${post.slug}`;
-  const ogImage = post.thumbnail_url 
-    ? `${baseUrl}${post.thumbnail_url}` 
-    : `${baseUrl}/opengraph-image`;
-  
+  const postUrl = `${SITE_URL}/blog/${post.slug}`;
+  const ogImage = post.thumbnail_url
+    ? `${SITE_URL}${post.thumbnail_url}`
+    : `${SITE_URL}/opengraph-image`;
+
   return {
     title: post.title,
     description: post.excerpt || post.title,
     keywords: post.tags || [],
-    authors: [{ name: "박수범", url: baseUrl }],
+    authors: [{ name: PROFILE.name, url: SITE_URL }],
     alternates: {
       canonical: postUrl,
     },
@@ -48,12 +49,12 @@ export async function generateMetadata({ params }: Props) {
       title: post.title,
       description: post.excerpt || post.title,
       url: postUrl,
-      siteName: "Subeom.dev",
-      locale: "ko_KR",
+      siteName: SITE_NAME,
+      locale: SITE_LOCALE,
       type: "article",
       publishedTime: post.published_at || post.created_at,
       modifiedTime: post.updated_at || post.published_at || post.created_at,
-      authors: ["박수범"],
+      authors: [PROFILE.name],
       tags: post.tags || [],
       images: [
         {
@@ -68,8 +69,8 @@ export async function generateMetadata({ params }: Props) {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt || post.title,
-      creator: "@sooknise",
-      site: "@sooknise",
+      creator: TWITTER_HANDLE,
+      site: TWITTER_HANDLE,
       images: [ogImage],
     },
   };
@@ -83,11 +84,10 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
-  const baseUrl = "https://subeomdev.vercel.app";
-  const postUrl = `${baseUrl}/blog/${post.slug}`;
-  const ogImage = post.thumbnail_url 
-    ? `${baseUrl}${post.thumbnail_url}` 
-    : `${baseUrl}/opengraph-image`;
+  const postUrl = `${SITE_URL}/blog/${post.slug}`;
+  const ogImage = post.thumbnail_url
+    ? `${SITE_URL}${post.thumbnail_url}`
+    : `${SITE_URL}/opengraph-image`;
 
   // BlogPosting JSON-LD 구조화된 데이터
   const blogPostingJsonLd = {
@@ -100,13 +100,13 @@ export default async function BlogPostPage({ params }: Props) {
     dateModified: post.updated_at || post.published_at || post.created_at,
     author: {
       "@type": "Person",
-      name: "박수범",
-      url: baseUrl,
+      name: PROFILE.name,
+      url: SITE_URL,
     },
     publisher: {
       "@type": "Person",
-      name: "박수범",
-      url: baseUrl,
+      name: PROFILE.name,
+      url: SITE_URL,
     },
     mainEntityOfPage: {
       "@type": "WebPage",

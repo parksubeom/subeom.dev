@@ -5,8 +5,17 @@ import "./globals.css";
 
 // ✨ FSD 구조에 맞게 경로 수정
 import { Header } from "@/components/header";
-import { Footer } from "@/components/footer"; 
+import { Footer } from "@/components/footer";
 import { ThemeProvider } from "@/components/theme-provider";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  SITE_AUTHOR,
+  SITE_LOCALE,
+  TWITTER_HANDLE,
+} from "@/shared/config/site";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -24,14 +33,13 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  // 1️⃣ [필수] OG 이미지 생성을 위한 기준 도메인 설정
-  metadataBase: new URL('https://subeomdev.vercel.app'),
+  metadataBase: new URL(SITE_URL),
 
   title: {
-    template: "%s | subeom.dev",
-    default: "subeom.dev | Frontend Developer",
+    template: `%s | ${SITE_NAME}`,
+    default: SITE_TITLE,
   },
-  description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
+  description: SITE_DESCRIPTION,
   keywords: [
     "프론트엔드 개발자",
     "Frontend Developer",
@@ -47,11 +55,11 @@ export const metadata: Metadata = {
     "subeomdev",
     "Subeom.dev",
   ],
-  authors: [{ name: "박수범", url: "https://subeomdev.vercel.app" }],
-  creator: "박수범",
-  publisher: "박수범",
+  authors: [{ name: SITE_AUTHOR, url: SITE_URL }],
+  creator: SITE_AUTHOR,
+  publisher: SITE_AUTHOR,
   icons: {
-    icon: "/icon", // 동적 파비콘 연결
+    icon: "/icon",
   },
   verification: {
     google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
@@ -60,21 +68,19 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "subeom.dev Portfolio",
-    description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
-    // 2️⃣ [수정] 실제 배포 주소로 변경
-    url: "https://subeomdev.vercel.app",
-    siteName: "subeom.dev",
-    locale: "ko_KR",
+    title: `${SITE_NAME} Portfolio`,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    siteName: SITE_NAME,
+    locale: SITE_LOCALE,
     type: "website",
-    // images: [] -> 제거함 (src/app/opengraph-image.tsx 자동 감지)
   },
   twitter: {
     card: "summary_large_image",
-    title: "subeom.dev Portfolio",
-    description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.",
-    creator: "@sooknise",
-    site: "@sooknise",
+    title: `${SITE_NAME} Portfolio`,
+    description: SITE_DESCRIPTION,
+    creator: TWITTER_HANDLE,
+    site: TWITTER_HANDLE,
   },
 };
 

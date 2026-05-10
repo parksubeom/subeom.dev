@@ -1,32 +1,34 @@
 import { HeroSection } from "@/widgets/home/ui/hero-section";
 import { FeaturedProjects } from "@/widgets/home/ui/featured-projects";
 import { SkillsSection } from "@/widgets/home/ui/skills-section";
-import { LatestArticles } from "@/widgets/home/ui/latest-articles"; 
+import { LatestArticles } from "@/widgets/home/ui/latest-articles";
 import { getProjects } from "@/entities/project/api/get-projects";
-import { getRecentPosts } from "@/entities/post/api/get-recent-posts"; 
+import { getRecentPosts } from "@/entities/post/api/get-recent-posts";
 import { AiWorkflow } from "@/widgets/home/ui/ai-workflow";
+import { SITE_URL, SITE_NAME } from "@/shared/config/site";
+import { PROFILE } from "@/shared/config/profile";
 
 export default async function Home() {
   // 1. 병렬로 데이터 가져오기 (Waterfall 방지)
   const [projects, recentPosts] = await Promise.all([
     getProjects(),
-    getRecentPosts(3), 
+    getRecentPosts(3),
   ]);
-
-  const baseUrl = "https://subeomdev.vercel.app";
 
   // Person JSON-LD 구조화된 데이터
   const personJsonLd = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "박수범",
-    alternateName: ["Subeom Park", "subeom.dev", "subeomdev"],
-    jobTitle: "Frontend Developer",
+    name: PROFILE.name,
+    alternateName: ["Subeom Park", SITE_NAME, "subeomdev"],
+    jobTitle: PROFILE.role,
     description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자",
-    url: baseUrl,
+    email: PROFILE.email,
+    url: SITE_URL,
+    image: `${SITE_URL}/opengraph-image`,
     sameAs: [
-      "https://github.com/parksubeom",
-      // 추가 SNS 링크가 있다면 여기에 추가
+      PROFILE.links.github,
+      PROFILE.links.threads,
     ],
     knowsAbout: [
       "Frontend Development",
@@ -34,11 +36,14 @@ export default async function Home() {
       "Next.js",
       "TypeScript",
       "Web Development",
+      "Web Performance Optimization",
+      "AI-Augmented Development",
     ],
-    alumniOf: {
-      "@type": "Organization",
-      name: "프론트엔드 개발자",
-    },
+    alumniOf: PROFILE.education.map((edu) => ({
+      "@type":
+        edu.type === "university" ? "CollegeOrUniversity" : "EducationalOrganization",
+      name: edu.name,
+    })),
   };
 
   return (

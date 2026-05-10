@@ -1,45 +1,47 @@
 import { MetadataRoute } from "next";
 import { getAllPosts } from "@/entities/post/api/get-posts";
-
-const baseUrl = "https://subeomdev.vercel.app";
+import { SITE_URL } from "@/shared/config/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // 모든 공개 블로그 포스트 가져오기
   const posts = await getAllPosts();
 
-  // 블로그 포스트 URL 생성
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: `${baseUrl}/blog/${post.slug}`,
+    url: `${SITE_URL}/blog/${post.slug}`,
     lastModified: post.updated_at || post.published_at || post.created_at,
     changeFrequency: "weekly",
     priority: 0.8,
   }));
 
-  // 정적 페이지 URL
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 1.0,
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${SITE_URL}/blog`,
       lastModified: new Date(),
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/projects`,
+      url: `${SITE_URL}/portfolio`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/about`,
+      url: `${SITE_URL}/about`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.5,
     },
   ];
 
