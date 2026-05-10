@@ -11,8 +11,9 @@ tech_stack:
   - Markdown
 github_url: "https://github.com/parksubeom/claude-distill"
 demo_url: "https://www.npmjs.com/package/claude-distill"
-thumbnail_url: ""
-images: []
+thumbnail_url: "https://kndxpccohandhwfcotyh.supabase.co/storage/v1/object/public/portfolio/claude-distill/npm-logo.png"
+images:
+  - "https://kndxpccohandhwfcotyh.supabase.co/storage/v1/object/public/portfolio/claude-distill/npm-logo.png"
 featured: true
 order: 2
 start_date: "2026-05-03"
