@@ -2,9 +2,12 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { PortfolioGrid } from "@/widgets/portfolio/ui/portfolio-grid";
 import { getProjects } from "@/entities/project/api/get-projects";
-import { getRecentPosts } from "@/entities/post/api/get-recent-posts"; // ✨ 변경된 API import
+import { getRecentPosts } from "@/entities/post/api/get-recent-posts";
 import { PostCard } from "@/entities/post/ui/post-card";
 import { Button } from "@/shared/ui/button";
+
+// 개발 환경: 캐시 없음, 프로덕션: 60초 ISR (DB 변경 시 자동 반영)
+export const revalidate = process.env.NODE_ENV === "development" ? 0 : 60;
 
 export const metadata = {
   title: "Portfolio",

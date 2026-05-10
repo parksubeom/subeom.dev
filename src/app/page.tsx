@@ -8,6 +8,9 @@ import { AiWorkflow } from "@/widgets/home/ui/ai-workflow";
 import { SITE_URL, SITE_NAME } from "@/shared/config/site";
 import { PROFILE } from "@/shared/config/profile";
 
+// 60초 ISR — Featured Projects DB 변경 시 자동 반영
+export const revalidate = process.env.NODE_ENV === "development" ? 0 : 60;
+
 export default async function Home() {
   // 1. 병렬로 데이터 가져오기 (Waterfall 방지)
   const [projects, recentPosts] = await Promise.all([
