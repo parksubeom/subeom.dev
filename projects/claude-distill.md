@@ -20,9 +20,9 @@ end_date: null
 
 detailInfo:
   overview: |
-    Claude를 매일 새로 출근하는 알바생이라고 생각해보세요. 어제 가르친 요령을 오늘도 똑같이 다시 설명해야 합니다. `claude-distill`은 어제 배운 걸 **자동으로 인수인계 노트에 적어두는 도구**입니다. 다음 날의 Claude가 출근하자마자 그 노트를 읽고 시작하니까, 같은 설명을 두 번 할 필요가 없습니다.
+    Claude를 매일 새로 출근하는 알바생이라고 생각해보세요. 어제 가르친 요령을 오늘도 똑같이 다시 설명해야 합니다. `claude-distill`은 어제 배운 걸 **자동으로 인수인계 노트에 적어두는 도구** 입니다. 다음 날의 Claude가 출근하자마자 그 노트를 읽고 시작하니까, 같은 설명을 두 번 할 필요가 없습니다.
 
-    **Stop hook + LLM 자동 추출**으로 매 세션의 결정·페일·환경 quirk를 markdown에 누적하고, `CLAUDE.md` `@reference`로 다음 세션 system prompt에 자동 inject. 사용자 액션은 첫 `claude-distill init` **한 번이 끝**.
+    **Stop hook + LLM 자동 추출** 으로 매 세션의 결정·페일·환경 quirk를 markdown에 누적하고, `CLAUDE.md` `@reference`로 다음 세션 system prompt에 자동 inject. 사용자 액션은 첫 `claude-distill init` **한 번이 끝**.
   period: "2026-05-03 ~ 진행 중 (npm v0.4.1 · 의존성 0 · 61KB)"
   team: "1인 개발"
   role: "전체 기획 · 설계 · 구현 · npm 배포 · 문서화"
@@ -80,7 +80,7 @@ detailInfo:
         | **`knowledge.md`** | 판례 — "이 상황엔 이렇게 했다" | 자동 누적 |
         | **`gotchas.md`** | 사고 보고서 — "같은 실수 반복 금지" | 자동 누적 |
 
-        법률은 사람이 쓰지만, **판례와 사고 보고서는 매일 쌓이는 거니까 자동화 가능**하다는 인사이트에서 출발했습니다.
+        법률은 사람이 쓰지만, **판례와 사고 보고서는 매일 쌓이는 거니까 자동화 가능** 하다는 인사이트에서 출발했습니다.
 
         ```
            ┌──────────────────────────────────────────┐
@@ -98,7 +98,7 @@ detailInfo:
               └─────────────────────────────┘
         ```
 
-        `claude-distill init`이 위 그림의 **`@reference` 두 줄**을 `CLAUDE.md`에 자동 등록 → 그 후 매 대화 끝마다 distill이 노트에 자동 추가 → 다음 대화 시작 시 Claude가 자동으로 읽음.
+        `claude-distill init`이 위 그림의 **`@reference` 두 줄** 을 `CLAUDE.md`에 자동 등록 → 그 후 매 대화 끝마다 distill이 노트에 자동 추가 → 다음 대화 시작 시 Claude가 자동으로 읽음.
     - title: "어떤 게 자동으로 누적되나 (실제 dogfood entry)"
       content: |
         세션 한 번 했더니 이런 entry들이 알아서 추출돼서 `~/.claude/gotchas.md` / `knowledge.md`에 추가된 **실제 결과** (편집 없음):
@@ -216,7 +216,7 @@ detailInfo:
         Hangul 음절 비율 임계로 transcript 언어 자동 감지. 카테고리 enum은 영어 머신 키 그대로, 자연어 필드(헤더 / 본문)만 ko/en 분기 → 파이프라인 안정성 보장하면서 한국어 사용자 진입장벽 제거.
 
         **5. CLAUDE_DISTILL_CHILD 환경변수 패턴**
-        Hook 기반 메타 도구는 자기 자신을 호출할 위험이 항상 있음. 자식 프로세스 환경에 명시 플래그 → 자식이 즉시 종료. **메타 도구 설계의 일반 패턴**으로 정립.
+        Hook 기반 메타 도구는 자기 자신을 호출할 위험이 항상 있음. 자식 프로세스 환경에 명시 플래그 → 자식이 즉시 종료. **메타 도구 설계의 일반 패턴** 으로 정립.
     - title: "프라이버시 / 보안"
       content: |
         - **별도 서버 없음** — 본인 머신 ↔ Anthropic API 직통. distill 운영자에게도 transcript 안 감
@@ -232,18 +232,18 @@ detailInfo:
         - **언팩 크기 61.4 KB · 13 파일 · 의존성 0개** — 사용자 머신 부담 0
         - **세션당 평균 비용 ~$0** (4단 게이트 차단 시), 게이트 통과 시에만 ~$0.10
         - **별도 서버 X · 락인 X** — 본인 머신 ↔ Anthropic API 직통, plain markdown 결과
-        - **ko/en i18n 자동 분기**로 한국어 사용자 진입장벽 제거
+        - **ko/en i18n 자동 분기** 로 한국어 사용자 진입장벽 제거
         - **Stop hook 메타 도구 패턴** 정립 — 환경변수 + dedup hash 두 겹 재귀 방어
         - **MIT License · 16 키워드** (claude-code-hook, knowledge-management, post-mortem, meta-tooling 등)
     - title: "회고 / 배운 점"
       content: |
-        **"Zero-effort"가 진짜 zero-effort가 되려면 게이트가 필수**였습니다. 매 turn 반환되는 Stop hook 환경에서는 비용 컷 메커니즘이 핵심이었고, 휴리스틱 + 1토큰 LLM yes/no 2단 구조가 최소 복잡도로 90% 컷을 달성했습니다. **"기능을 만드는 것"보다 "기능이 영향을 주는 비용 모델을 설계하는 것"**이 진짜 일이었습니다.
+        **"Zero-effort"가 진짜 zero-effort가 되려면 게이트가 필수** 였습니다. 매 turn 반환되는 Stop hook 환경에서는 비용 컷 메커니즘이 핵심이었고, 휴리스틱 + 1토큰 LLM yes/no 2단 구조가 최소 복잡도로 90% 컷을 달성했습니다. **"기능을 만드는 것"보다 "기능이 영향을 주는 비용 모델을 설계하는 것"** 이 진짜 일이었습니다.
 
-        **Hook 기반 메타 도구의 무한 재귀는 흔한 함정**입니다. 환경변수 + dedup hash 두 겹으로 방어 설계 — 단일 가드는 언제든 깨질 수 있다는 걸 dogfood 과정에서 직접 배웠습니다.
+        **Hook 기반 메타 도구의 무한 재귀는 흔한 함정** 입니다. 환경변수 + dedup hash 두 겹으로 방어 설계 — 단일 가드는 언제든 깨질 수 있다는 걸 dogfood 과정에서 직접 배웠습니다.
 
-        **기술 식별자 vs 자연어 필드 분리**가 i18n의 핵심이었습니다. enum 키 영어 고정, 문장만 분기 → 파이프라인 안정성 보장. 다국어는 데이터 모델 설계 단계에서 결정해야 한다는 걸 다시 확인했습니다.
+        **기술 식별자 vs 자연어 필드 분리** 가 i18n의 핵심이었습니다. enum 키 영어 고정, 문장만 분기 → 파이프라인 안정성 보장. 다국어는 데이터 모델 설계 단계에서 결정해야 한다는 걸 다시 확인했습니다.
 
-        가장 메타적인 학습은 **"도구가 곧 도구의 사용자"**라는 구조였습니다. claude-distill 자체를 Claude Code로 만들었고, 그 과정에서 발견한 페인 포인트(promptId가 null이라는 점 등)가 그대로 README의 첫 번째 dogfood entry로 들어갔습니다. 자기 자신이 가장 정직한 첫 사용자일 때 도구의 본질이 드러납니다.
+        가장 메타적인 학습은 **"도구가 곧 도구의 사용자"** 라는 구조였습니다. claude-distill 자체를 Claude Code로 만들었고, 그 과정에서 발견한 페인 포인트(promptId가 null이라는 점 등)가 그대로 README의 첫 번째 dogfood entry로 들어갔습니다. 자기 자신이 가장 정직한 첫 사용자일 때 도구의 본질이 드러납니다.
   links:
     github: "https://github.com/parksubeom/claude-distill"
     demo: "https://www.npmjs.com/package/claude-distill"

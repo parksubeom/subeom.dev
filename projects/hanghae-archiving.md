@@ -37,16 +37,16 @@ sections:
         ![Dashboard UI](https://kndxpccohandhwfcotyh.supabase.co/storage/v1/object/public/portfolio/hanghea_list.png)
         
         **Key Metrics**
-        - **데이터 정확도**: 초기 매칭 실패율 40% → **95% 이상**으로 개선
+        - **데이터 정확도**: 초기 매칭 실패율 40% → **95% 이상** 으로 개선
         - **복구 성과**: 단순 URL 매칭으로 찾을 수 없었던 **40% 이상의 누락 데이터 복구**
-        - **운영 효율**: 수동 개입이 필요한 케이스를 전체의 **5% 미만**으로 단축
+        - **운영 효율**: 수동 개입이 필요한 케이스를 전체의 **5% 미만** 으로 단축
   - title: "핵심 기술: 4-Layer Fallback 매칭 알고리즘"
     content: |
         **Problem**
         수강생들의 PR Re-open, 리포지토리 포맷 변경, 계정 ID 불일치 등 다양한 변수로 인해 단순 문자열 매칭으로는 데이터 정합성을 보장할 수 없었습니다.
         
         **Engineering Solution**
-        단일 매칭 실패 시 순차적으로 복구를 시도하는 **결함 허용(Fault Tolerant) 알고리즘**을 독자 설계했습니다.
+        단일 매칭 실패 시 순차적으로 복구를 시도하는 **결함 허용(Fault Tolerant) 알고리즘** 을 독자 설계했습니다.
         
         ![Logic Diagram](https://kndxpccohandhwfcotyh.supabase.co/storage/v1/object/public/portfolio/hanghae_logic.png)
         
@@ -60,24 +60,24 @@ sections:
         기존의 단순 점수제를 폐지하고, **완료율(Completion Rate)과 베스트 프랙티스(BP)** 달성 여부를 복합적으로 평가하는 로직(`ranking.utils.ts`)으로 재설계했습니다. 블랙(상위 100%+BP2)부터 화이트까지 6단계 등급 시스템을 구축하여 성취감을 고취시켰습니다.
         
         **UX/UI: 3D Flip Card Animation**
-        사용자 프로필 카드에 **CSS 3D Transform**을 적용하여 인터랙티브한 경험을 제공했습니다.
+        사용자 프로필 카드에 **CSS 3D Transform** 을 적용하여 인터랙티브한 경험을 제공했습니다.
         - **Engineering**: `perspective`와 `rotateY`를 활용해 카드 뒤집기 효과 구현, `will-change` 속성으로 브라우저 렌더링 최적화
         - **Motion**: `cubic-bezier` 이징 함수를 커스텀하여 자연스럽고 무게감 있는 애니메이션 구현
         
         **Visual: 등급별 동적 테마링**
-        등급 데이터에 따라 배경 그라데이션, 글래스모피즘(Backdrop Blur), SVG 뱃지, 그림자 효과가 자동으로 변경되는 **Dynamic Styling System**을 구축하여 시각적 피드백을 강화했습니다.
+        등급 데이터에 따라 배경 그라데이션, 글래스모피즘(Backdrop Blur), SVG 뱃지, 그림자 효과가 자동으로 변경되는 **Dynamic Styling System** 을 구축하여 시각적 피드백을 강화했습니다.
   - title: 관측 가능성(Observability) 확보
     content: |
         **Challenge**
         매칭 로직이 복잡해질수록 "왜 매칭에 실패했는지" 원인을 파악하기 어려워졌습니다(Black Box 문제).
         
         **Action**
-        매칭 프로세스 실행 시, 성공/실패 원인과 매칭 경로를 분석한 **디버깅 리포트(`matching-debug.md`) 자동 생성 시스템**을 구현했습니다.
+        매칭 프로세스 실행 시, 성공/실패 원인과 매칭 경로를 분석한 **디버깅 리포트(`matching-debug.md`) 자동 생성 시스템** 을 구현했습니다.
         
         ![Dashboard](https://kndxpccohandhwfcotyh.supabase.co/storage/v1/object/public/portfolio/hanghae_dashboard.png)
         
         **Impact**
-        데이터 정합성을 투명하게 증명하고, 매칭 실패 시 원인 파악 시간을 수십 분에서 **즉시 확인**으로 단축했습니다.
+        데이터 정합성을 투명하게 증명하고, 매칭 실패 시 원인 파악 시간을 수십 분에서 **즉시 확인** 으로 단축했습니다.
   - title: "트러블슈팅: SSR Hydration Mismatch"
     content: |
         **Issue**

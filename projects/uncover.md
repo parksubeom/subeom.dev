@@ -42,7 +42,7 @@ sections:
         영상 편집 툴 없이도 웹상에서 음원과 비디오의 어울림을 확인할 수 있는 `피팅룸` 기능이 필요했습니다.
         
         **Solution**
-        Video와 Audio DOM 요소를 `useRef`로 직접 참조하여, 단일 컨트롤러에서 두 미디어의 **재생/일시정지/볼륨/Seek**을 제어하는 동기화 로직을 구현했습니다.
+        Video와 Audio DOM 요소를 `useRef`로 직접 참조하여, 단일 컨트롤러에서 두 미디어의 **재생/일시정지/볼륨/Seek** 을 제어하는 동기화 로직을 구현했습니다.
   - title: "트러블슈팅: Client-Side OAuth2 인증 구현"
     content: |
         **Problem**
