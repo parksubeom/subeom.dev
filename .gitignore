@@ -37,3 +37,11 @@ next-env.d.ts
 
 # commit messages
 commit-msg.txt
+
+# project asset images — uploaded to Supabase Storage, not version-controlled
+projects/_assets/**/*.png
+projects/_assets/**/*.jpg
+projects/_assets/**/*.jpeg
+projects/_assets/**/*.gif
+projects/_assets/**/*.webp
+projects/_assets/**/*.svg
