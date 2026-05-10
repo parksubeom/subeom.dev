@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
+import { PROFILE } from "@/shared/config/profile";
 
-// 설정
 export const runtime = "edge";
 export const alt = "Subeom.dev - Frontend & Web Accessibility";
 export const size = {
@@ -9,17 +9,33 @@ export const size = {
 };
 export const contentType = "image/png";
 
-// 브랜드 컬러 (Hex Code 필수)
 const COLORS = {
-  background: "#0f172a", // Slate-900
-  backgroundEnd: "#1e293b", // Slate-800
-  primary: "#2A9D8F", // Teal (브랜드 컬러)
-  purple: "#a855f7", // Purple (포인트 컬러)
-  text: "#f8fafc", // Slate-50
-  muted: "#94a3b8", // Slate-400
+  background: "#0f172a",
+  backgroundEnd: "#1e293b",
+  primary: "#2A9D8F",
+  purple: "#a855f7",
+  text: "#f8fafc",
+  muted: "#94a3b8",
 };
 
+// GitHub 아바타 URL — username만 갈아끼우면 사진 자동 동기화
+const githubUsername = PROFILE.links.github.split("/").pop() || "parksubeom";
+const PROFILE_IMAGE_URL = `https://github.com/${githubUsername}.png?size=320`;
+
 export default async function Image() {
+  // GitHub 아바타를 fetch — 실패 시 fallback 로고로 대체
+  let profileImageData: string | null = null;
+  try {
+    const res = await fetch(PROFILE_IMAGE_URL);
+    if (res.ok) {
+      const buffer = await res.arrayBuffer();
+      const base64 = Buffer.from(buffer).toString("base64");
+      profileImageData = `data:image/png;base64,${base64}`;
+    }
+  } catch {
+    profileImageData = null;
+  }
+
   return new ImageResponse(
     (
       <div
@@ -69,46 +85,68 @@ export default async function Image() {
 
         {/* === 중앙 컨텐츠 === */}
         <div style={{ display: "flex", alignItems: "center", gap: "48px" }}>
-          
-          {/* 1. 로고 심볼 (B) */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: "160px",
-              height: "160px",
-              borderRadius: "32px",
-              background: COLORS.primary,
-              border: `2px solid rgba(255,255,255,0.1)`,
-              boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
-              position: "relative",
-            }}
-          >
+          {/* 1. 프로필 사진 (GitHub 아바타) — 실패 시 B 로고 fallback */}
+          {profileImageData ? (
             <div
               style={{
-                fontSize: "100px",
-                fontWeight: 900,
-                color: "white",
-                marginTop: "-8px",
+                display: "flex",
+                width: "200px",
+                height: "200px",
+                borderRadius: "100px",
+                overflow: "hidden",
+                border: `4px solid ${COLORS.primary}`,
+                boxShadow: `0 20px 50px rgba(0,0,0,0.4), 0 0 30px ${COLORS.primary}40`,
+                position: "relative",
               }}
             >
-              B
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={profileImageData}
+                alt={PROFILE.name}
+                width={200}
+                height={200}
+                style={{ objectFit: "cover" }}
+              />
             </div>
-            {/* 포인트 Dot */}
+          ) : (
             <div
               style={{
-                position: "absolute",
-                top: "16px",
-                right: "16px",
-                width: "24px",
-                height: "24px",
-                borderRadius: "50%",
-                background: COLORS.purple,
-                boxShadow: `0 0 20px ${COLORS.purple}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "160px",
+                height: "160px",
+                borderRadius: "32px",
+                background: COLORS.primary,
+                border: `2px solid rgba(255,255,255,0.1)`,
+                boxShadow: "0 20px 50px rgba(0,0,0,0.3)",
+                position: "relative",
               }}
-            />
-          </div>
+            >
+              <div
+                style={{
+                  fontSize: "100px",
+                  fontWeight: 900,
+                  color: "white",
+                  marginTop: "-8px",
+                }}
+              >
+                B
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  top: "16px",
+                  right: "16px",
+                  width: "24px",
+                  height: "24px",
+                  borderRadius: "50%",
+                  background: COLORS.purple,
+                  boxShadow: `0 0 20px ${COLORS.purple}`,
+                }}
+              />
+            </div>
+          )}
 
           {/* 2. 텍스트 정보 */}
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -124,8 +162,7 @@ export default async function Image() {
             >
               subeom.dev
             </div>
-            
-            {/* ✨ 문구 변경 부분 */}
+
             <div
               style={{
                 fontSize: "32px",
@@ -138,8 +175,19 @@ export default async function Image() {
             >
               <span>Frontend Engineering</span>
               <span style={{ color: COLORS.muted }}>•</span>
-              {/* 접근성을 강조하는 문구 */}
               <span>Web Accessibility</span>
+            </div>
+
+            {/* 이름 표기 추가 — 브랜딩 강화 */}
+            <div
+              style={{
+                fontSize: "24px",
+                fontWeight: 500,
+                color: COLORS.muted,
+                marginTop: "16px",
+              }}
+            >
+              {PROFILE.name} · Frontend Developer
             </div>
           </div>
         </div>
@@ -147,6 +195,6 @@ export default async function Image() {
     ),
     {
       ...size,
-    }
+    },
   );
 }
