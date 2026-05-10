@@ -7,7 +7,7 @@ import { PostCard } from "@/entities/post/ui/post-card";
 import { Button } from "@/shared/ui/button";
 
 // 개발 환경: 캐시 없음, 프로덕션: 60초 ISR (DB 변경 시 자동 반영)
-export const revalidate = process.env.NODE_ENV === "development" ? 0 : 60;
+export const revalidate = 60;
 
 export const metadata = {
   title: "Portfolio",

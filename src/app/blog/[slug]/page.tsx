@@ -6,15 +6,15 @@ import { SITE_URL, SITE_NAME, SITE_LOCALE, TWITTER_HANDLE } from "@/shared/confi
 import { PROFILE } from "@/shared/config/profile";
 
 // 개발 환경에서는 캐시 없이 최신 데이터 사용, 프로덕션에서는 60초 ISR
-export const revalidate = process.env.NODE_ENV === "development" ? 0 : 60;
+export const revalidate = 60;
 
 interface Props {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
-// 1. SSG를 위한 정적 경로 생성 (이제 에러가 안 날 것입니다)
+// 1. SSG를 위한 정적 경로 생성 (Next 15: 반환 형태는 동일)
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs();
   return slugs.map((slug) => ({
@@ -22,9 +22,10 @@ export async function generateStaticParams() {
   }));
 }
 
-// 2. 메타데이터 생성
+// 2. 메타데이터 생성 (Next 15: params 는 Promise)
 export async function generateMetadata({ params }: Props) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
   
   if (!post) {
     return {
@@ -76,9 +77,10 @@ export async function generateMetadata({ params }: Props) {
   };
 }
 
-// 3. 페이지 렌더링
+// 3. 페이지 렌더링 (Next 15: params 는 Promise)
 export default async function BlogPostPage({ params }: Props) {
-  const post = await getPostBySlug(params.slug);
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
   if (!post) {
     notFound();
