@@ -8,7 +8,7 @@ Next.js 14 App Router + Supabase 기반의 풀스택 개인 사이트. **FSD 아
 
 ---
 
-## 🛠 기술 스택
+## 기술 스택
 
 | 영역 | 기술 |
 |---|---|
@@ -23,7 +23,7 @@ Next.js 14 App Router + Supabase 기반의 풀스택 개인 사이트. **FSD 아
 
 ---
 
-## 🏗 아키텍처 — FSD (Feature-Sliced Design)
+## 아키텍처 — FSD (Feature-Sliced Design)
 
 ```
 src/
@@ -38,7 +38,7 @@ src/
 
 ---
 
-## 🚀 시작하기
+## 시작하기
 
 ### 1. 환경 변수 (`.env.local`)
 
@@ -70,7 +70,7 @@ pnpm build        # 프로덕션 빌드
 
 ---
 
-## 📝 콘텐츠 작성
+## 콘텐츠 작성
 
 블로그 글과 포트폴리오 프로젝트는 **로컬 마크다운 → Supabase 동기화** 패턴으로 관리됩니다.
 
@@ -86,7 +86,7 @@ pnpm build        # 프로덕션 빌드
 
 ---
 
-## 🌐 도메인 & SEO
+## 도메인 & SEO
 
 ### 도메인 변경
 모든 URL은 [`src/shared/config/site.ts`](src/shared/config/site.ts)의 `SITE_URL` 한 곳에서 관리합니다.
@@ -108,7 +108,7 @@ export const SITE_URL = "https://subeomdev.vercel.app";
 
 ---
 
-## 📂 프로젝트 구조
+## 프로젝트 구조
 
 ```
 subeom.dev/
@@ -134,7 +134,7 @@ subeom.dev/
 
 ---
 
-## ✨ 주요 기능
+## 주요 기능
 
 | 영역 | 기능 |
 |---|---|
@@ -146,7 +146,7 @@ subeom.dev/
 
 ---
 
-## 🎯 개발 히스토리
+## 개발 히스토리
 
 | Phase | 핵심 작업 |
 |---|---|
@@ -159,7 +159,7 @@ subeom.dev/
 
 ---
 
-## 🐛 주요 트러블슈팅 기록
+## 주요 트러블슈팅 기록
 
 | 이슈 | 해결 |
 |---|---|
@@ -175,7 +175,7 @@ subeom.dev/
 
 ---
 
-## 📊 성능 최적화
+## 성능 최적화
 
 - **서버 컴포넌트 우선**: 클라이언트 번들 최소화
 - **SSG + ISR (60초)**: 초기 로딩 ↓ + 콘텐츠 신선도 ↑
@@ -186,7 +186,7 @@ subeom.dev/
 
 ---
 
-## 📚 참고 자료
+## 참고 자료
 
 - [Next.js 14 App Router](https://nextjs.org/docs/app)
 - [Feature-Sliced Design](https://feature-sliced.design/)
@@ -196,6 +196,6 @@ subeom.dev/
 
 ---
 
-## 📄 라이선스
+## 라이선스
 
 개인 포트폴리오 프로젝트.

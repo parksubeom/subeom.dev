@@ -117,14 +117,14 @@ detailInfo:
       content: |
         분석기가 entry마다 다음 11개 중 하나로 분류합니다:
 
-        **🧠 판례 (knowledge.md)**
+        **판례 (knowledge.md)**
         - `trade_off_decision` — 트레이드오프 결정
         - `environment_quirk` — 환경 특이점
         - `scale_transition` — 규모 전환점
         - `tooling_insight` — 도구 인사이트
         - `performance_insight` — 성능 인사이트
 
-        **⚠️ 사고 (gotchas.md)**
+        **사고 (gotchas.md)**
         - `api_quirk` — API 함정
         - `type_shape` — 타입 모양
         - `concurrency_race` — 동시성 레이스
