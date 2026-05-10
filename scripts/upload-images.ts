@@ -111,15 +111,15 @@ async function main() {
 
   // 마크다운 친화 출력
   console.log("\n=== 마크다운 복사용 ===\n");
-  const grouped = new Map<string, Result[]>();
+  const grouped: Record<string, Result[]> = {};
   for (const r of results.filter((r) => r.ok)) {
     const slug = r.remote.split("/")[0];
-    if (!grouped.has(slug)) grouped.set(slug, []);
-    grouped.get(slug)!.push(r);
+    if (!grouped[slug]) grouped[slug] = [];
+    grouped[slug].push(r);
   }
-  for (const [slug, items] of grouped) {
+  for (const slug of Object.keys(grouped)) {
     console.log(`# ${slug}`);
-    for (const it of items) {
+    for (const it of grouped[slug]) {
       const filename = path.basename(it.remote, path.extname(it.remote));
       console.log(`![${filename}](${it.url})`);
     }
