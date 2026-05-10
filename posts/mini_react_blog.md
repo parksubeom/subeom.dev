@@ -84,11 +84,11 @@ React의 핵심인 Hook 시스템을 구현했습니다.
 
 **원인 분석**
 
-브라우저는 `<option>`에 `selected` attribute가 있으면 값이 `"false"`여도 선택된 것으로 처리했습니다. MiniReact는 **attribute만 갱신**했기 때문에 브라우저 렌더링 이후 `setAttribute('selected', 'true')`를 호출해도 화면의 선택값은 변하지 않았습니다.
+브라우저는 `<option>`에 `selected` attribute가 있으면 값이 `"false"`여도 선택된 것으로 처리했습니다. MiniReact는 **attribute만 갱신** 했기 때문에 브라우저 렌더링 이후 `setAttribute('selected', 'true')`를 호출해도 화면의 선택값은 변하지 않았습니다.
 
 **해결 방법**
 
-`selected`를 attribute가 아닌 **DOM Property**로 업데이트하도록 변경했습니다.
+`selected`를 attribute가 아닌 **DOM Property** 로 업데이트하도록 변경했습니다.
 
 ```typescript
 // core/dom.ts
@@ -194,7 +194,7 @@ function useRef(initialValue) {
 
 ### 4. Props는 '명령'이다
 
-Props는 단순 데이터가 아니라 **DOM 상태를 조작하는 명령**입니다.
+Props는 단순 데이터가 아니라 **DOM 상태를 조작하는 명령** 입니다.
 
 - `onClick={handler}` → 이벤트 리스너 등록
 - `style={{ color: 'red' }}` → DOM style 속성 적용
@@ -252,6 +252,6 @@ Props는 단순 데이터가 아니라 **DOM 상태를 조작하는 명령**입�
 
 ## 마치며
 
-이 프로젝트는 단순히 React를 클론 코딩하는 것이 아니라, **왜 이런 API가 필요한지, 왜 이런 제약이 있는지**를 이해하는 여정이었습니다. 앞으로 React를 사용할 때 더 깊이 있는 통찰을 가지고 최적화와 디버깅에 임할 수 있을 것 같습니다.
+이 프로젝트는 단순히 React를 클론 코딩하는 것이 아니라, **왜 이런 API가 필요한지, 왜 이런 제약이 있는지** 를 이해하는 여정이었습니다. 앞으로 React를 사용할 때 더 깊이 있는 통찰을 가지고 최적화와 디버깅에 임할 수 있을 것 같습니다.
 
 "왜?"라는 질문에 답하고 싶다면, 직접 만들어보세요. 그것이 가장 확실한 이해의 방법입니다.
