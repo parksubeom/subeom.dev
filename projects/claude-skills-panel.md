@@ -121,7 +121,7 @@ detailInfo:
         10개 클래스 공격 모션을 단일 `ATTACK_EFFECTS` 맵 + 3개 키프레임(`projectile`/`melee`/`aura`)으로 추상화. CSS Custom Properties(`--dx`, `--dy`)로 발사체 궤적 계산 → 코드 한 줄로 새 공격 정의 가능.
     - title: "성과"
       content: |
-        - **Open VSX 3,762 다운로드 · 평점 5.0/5.0** (VS Code Marketplace 합산 누적 3,800+)
+        - **Open VSX 3,762 다운로드 · 평점 5/5.0** (VS Code Marketplace 합산 누적 3800+)
         - **7일 만에 v0.20.0(MVP) → v0.44.6** — 33개 버전을 Open VSX에 게시, GitHub Actions 자동 배포로 수동 작업 0
         - **4개 IDE × 2개 마켓플레이스** 배포 (VS Code · Cursor · Windsurf · VSCodium / VS Code Marketplace · OpenVSX)
         - **4개 언어 i18n 220+ 키** (en/ko/ja/zh) — 키 파리티 검증 스크립트로 회귀 방지
