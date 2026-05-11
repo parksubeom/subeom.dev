@@ -85,9 +85,11 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                       <span className="w-1 h-6 bg-primary rounded-full" aria-hidden="true"/>
                       Overview
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                      {detailInfo.overview}
-                    </p>
+                    <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground leading-relaxed">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {detailInfo.overview}
+                      </ReactMarkdown>
+                    </div>
                   </div>
                   
                   <div className="space-y-4 p-4 bg-muted/30 rounded-lg border border-border/40 h-fit">
