@@ -2,6 +2,7 @@ import { HeroSection } from "@/widgets/home/ui/hero-section";
 import { FeaturedProjects } from "@/widgets/home/ui/featured-projects";
 import { SkillsSection } from "@/widgets/home/ui/skills-section";
 import { LatestArticles } from "@/widgets/home/ui/latest-articles";
+import { ThreadsQuotes } from "@/widgets/home/ui/threads-quotes";
 import { getProjects } from "@/entities/project/api/get-projects";
 import { getRecentPosts } from "@/entities/post/api/get-recent-posts";
 import { AiWorkflow } from "@/widgets/home/ui/ai-workflow";
@@ -25,7 +26,8 @@ export default async function Home() {
     name: PROFILE.name,
     alternateName: ["Subeom Park", SITE_NAME, "subeomdev"],
     jobTitle: PROFILE.role,
-    description: "비즈니스 임팩트를 고민하는 프론트엔드 개발자",
+    description:
+      "집에선 출력을, 회사에선 정확도를 연마하는 프론트엔드 개발자. claude-distill · Claude Code Skills Panel 메인테이너.",
     email: PROFILE.email,
     url: SITE_URL,
     image: `${SITE_URL}/opengraph-image`,
@@ -57,16 +59,19 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <div className="space-y-32 pb-24">
-        {/* Hero */}
+        {/* Hero — thesis + 컨설턴트 한 줄 + live stats */}
         <HeroSection />
-        
-        {/* AI kills  */}
+
+        {/* From the Threads — 요즘 생각 인용 3장 */}
+        <ThreadsQuotes />
+
+        {/* AI Workflow — 지휘하는 개발자 방법론 */}
         <AiWorkflow />
-        
+
         {/* Skills */}
         <SkillsSection />
 
-        {/* Featured Projects */}
+        {/* Featured Projects — 페인포인트 한 줄 띠와 함께 */}
         <FeaturedProjects projects={projects} />
 
         {/* Latest Articles */}
