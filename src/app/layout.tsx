@@ -67,6 +67,9 @@ export const metadata: Metadata = {
       "naver-site-verification": process.env.NEXT_PUBLIC_NAVER_SITE_VERIFICATION || "",
     },
   },
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
     title: `${SITE_NAME} Portfolio`,
     description: SITE_DESCRIPTION,
@@ -74,6 +77,14 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: SITE_LOCALE,
     type: "website",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — ${SITE_AUTHOR}`,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -81,6 +92,7 @@ export const metadata: Metadata = {
     description: SITE_DESCRIPTION,
     creator: TWITTER_HANDLE,
     site: TWITTER_HANDLE,
+    images: ["/opengraph-image"],
   },
 };
 
@@ -101,11 +113,22 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className="flex min-h-screen flex-col relative">
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:rounded-md focus:bg-primary focus:text-primary-foreground focus:shadow-md focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            >
+              본문으로 건너뛰기
+            </a>
+
             {/* 상단 헤더 */}
             <Header />
-            
+
             {/* 메인 컨텐츠 영역 */}
-            <main className="flex-1 w-full max-w-3xl mx-auto px-6 md:px-0 py-12 selection:bg-primary/20">
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="flex-1 w-full max-w-3xl mx-auto px-6 md:px-0 py-12 selection:bg-primary/20"
+            >
               {children}
             </main>
             

@@ -5,6 +5,7 @@ import { getProjects } from "@/entities/project/api/get-projects";
 import { getRecentPosts } from "@/entities/post/api/get-recent-posts";
 import { PostCard } from "@/entities/post/ui/post-card";
 import { Button } from "@/shared/ui/button";
+import { SITE_URL } from "@/shared/config/site";
 
 // 개발 환경: 캐시 없음, 프로덕션: 60초 ISR (DB 변경 시 자동 반영)
 export const revalidate = 60;
@@ -12,6 +13,9 @@ export const revalidate = 60;
 export const metadata = {
   title: "Portfolio",
   description: "프로젝트 포트폴리오",
+  alternates: {
+    canonical: `${SITE_URL}/portfolio`,
+  },
 };
 
 export default async function PortfolioPage() {

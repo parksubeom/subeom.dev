@@ -54,7 +54,11 @@ export function ContactPage() {
                     <a href={`mailto:${PROFILE.email}`} className="text-sm hover:text-primary transition-colors">
                       {PROFILE.email}
                     </a>
-                    <button onClick={handleCopy} className="text-muted-foreground hover:text-foreground">
+                    <button
+                      onClick={handleCopy}
+                      className="text-muted-foreground hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
+                      aria-label={copied ? "이메일 주소 복사됨" : "이메일 주소 복사"}
+                    >
                       {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                   </div>

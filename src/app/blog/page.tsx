@@ -1,5 +1,6 @@
 import { PostListSection } from "@/widgets/blog";
 import { getPosts, getTotalPostsCount, getAllPosts, getAllTags } from "@/entities/post/api/get-posts";
+import { SITE_URL } from "@/shared/config/site";
 
 // 개발 환경에서는 캐시 없이 최신 데이터 사용, 프로덕션에서는 60초 ISR
 export const revalidate = 60;
@@ -7,6 +8,9 @@ export const revalidate = 60;
 export const metadata = {
   title: "Blog",
   description: "기술 블로그",
+  alternates: {
+    canonical: `${SITE_URL}/blog`,
+  },
 };
 
 interface BlogPageProps {
