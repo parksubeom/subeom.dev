@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   outputFileTracingIncludes: {
-    "/": ["./projects/**/*.md"],
+    "/": ["./projects/**/*.md", "./data/**/*.md", "./posts/**/*.md"],
     "/portfolio": ["./projects/**/*.md"],
+    "/blog": ["./posts/**/*.md"],
+    "/blog/:slug*": ["./posts/**/*.md"],
   },
   images: {
     remotePatterns: [
