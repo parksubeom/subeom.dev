@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Button } from "@/shared/ui/button";
 import { Badge } from "@/shared/ui/badge";
-import type { Project } from "@/entities/project/model/types";
+import type { Project, ProjectDetail } from "@/entities/project/model/types";
 import type { Tables } from "@/type/supabase";
 import { useFocusTrap } from "@/shared/hooks/useFocusTrap"; // 훅 import
 
@@ -17,6 +17,36 @@ interface ProjectModalProps {
   onClose: () => void;
 }
 
+function buildFallbackDetail(project: Tables<'projects'>): ProjectDetail {
+  const formatDate = (d: string | null) => {
+    if (!d) return "";
+    const date = new Date(d);
+    if (Number.isNaN(date.getTime())) return d;
+    return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}`;
+  };
+  const start = formatDate(project.start_date);
+  const end = formatDate(project.end_date);
+  const period = [start, end].filter(Boolean).join(" - ") || "기간 미정";
+
+  return {
+    overview:
+      project.long_description ||
+      project.description ||
+      "상세 설명이 아직 등록되지 않았습니다.",
+    period,
+    team: "—",
+    role: "—",
+    techStack: project.tech_stack ?? [],
+    sections: [],
+    links: {
+      github: project.github_url ?? null,
+      demo: project.demo_url ?? null,
+      notion: null,
+    },
+    images: project.images ?? undefined,
+  };
+}
+
 export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
   // ✨ useFocusTrap 훅 사용 (기존 useEffect 대체)
   // 반환된 ref를 모달 컨테이너에 연결해줍니다.
@@ -24,11 +54,10 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
 
   if (!project || !isOpen) return null;
 
-  if (!('detailInfo' in project) || !project.detailInfo) {
-    return null;
-  }
-
-  const { detailInfo } = project;
+  const hasDetail = 'detailInfo' in project && project.detailInfo;
+  const detailInfo: ProjectDetail = hasDetail
+    ? (project as Project).detailInfo
+    : buildFallbackDetail(project as Tables<'projects'>);
 
   return (
     <AnimatePresence>
