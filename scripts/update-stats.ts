@@ -156,6 +156,29 @@ async function main() {
   console.log(`  weekly: ${di.weeklyDownloads}`);
   console.log(`  size: ${(di.unpackedSize / 1024).toFixed(1)} KB · ${di.fileCount} files\n`);
 
+  // 라이브 통계 config 파일을 매번 덮어씀 (Hero 컴포넌트가 import).
+  const statsTs = path.join(
+    process.cwd(),
+    "src/shared/config/stats.ts",
+  );
+  const statsContent = `// 자동 갱신되는 라이브 통계.
+// \`pnpm update:stats\` 가 매일 09:00 cron 으로 갱신하고, 이 파일을 그대로 덮어씁니다.
+// 수동으로 손대지 마세요 — 다음 갱신 사이클에 덮어쓰입니다.
+
+export const LIVE_STATS = {
+  openVsxDownloads: ${sp.downloadCount},
+  npmWeeklyDownloads: ${di.weeklyDownloads},
+  lastUpdated: "${new Date().toISOString()}",
+} as const;
+`;
+  if (fs.existsSync(statsTs)) {
+    const prev = fs.readFileSync(statsTs, "utf-8");
+    if (prev !== statsContent) {
+      fs.writeFileSync(statsTs, statsContent);
+      console.log("✅ src/shared/config/stats.ts  (live stats 갱신)");
+    }
+  }
+
   const replacements = buildReplacements(sp, di);
   const root = process.cwd();
   const changed: string[] = [];
