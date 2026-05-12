@@ -1,42 +1,67 @@
-// src/entities/post/api/get-posts.ts
 import { createStaticClient } from "@/shared/lib/supabase/static";
+import {
+  getAllPostsFromMd,
+  getAllTagsFromMd,
+  isSupabaseConfigured,
+} from "./post-fs-fallback";
 import type { Post } from "@/entities/post/model/types";
 
-export async function getPosts(page: number = 1, limit: number = 5, tag?: string): Promise<Post[]> {
+function filterByTag<T extends { tags: string[] | null }>(
+  posts: T[],
+  tag?: string,
+): T[] {
+  if (!tag) return posts;
+  return posts.filter((p) => (p.tags ?? []).includes(tag));
+}
+
+export async function getPosts(
+  page: number = 1,
+  limit: number = 5,
+  tag?: string,
+): Promise<Post[]> {
+  if (!isSupabaseConfigured()) {
+    const all = filterByTag(getAllPostsFromMd(), tag);
+    const from = (page - 1) * limit;
+    return all.slice(from, from + limit);
+  }
+
   const supabase = createStaticClient();
   const from = (page - 1) * limit;
   const to = from + limit - 1;
-  
+
   let query = supabase
     .from("posts")
     .select("*")
-    .eq("published", true) // 공개된 글만
-    .order("published_at", { ascending: false }); // 최신순
+    .eq("published", true)
+    .order("published_at", { ascending: false });
 
-  // 태그 필터링 추가
   if (tag) {
-    query = query.contains("tags", [tag]); // tags 배열에 해당 tag가 포함된 경우
+    query = query.contains("tags", [tag]);
   }
 
   const { data, error } = await query.range(from, to);
 
   if (error) {
     console.error("Error fetching posts:", error);
-    return [];
+    const all = filterByTag(getAllPostsFromMd(), tag);
+    return all.slice(from, from + limit);
   }
 
   return data as Post[];
 }
 
 export async function getTotalPostsCount(tag?: string): Promise<number> {
+  if (!isSupabaseConfigured()) {
+    return filterByTag(getAllPostsFromMd(), tag).length;
+  }
+
   const supabase = createStaticClient();
-  
+
   let query = supabase
     .from("posts")
     .select("*", { count: "exact", head: true })
     .eq("published", true);
 
-  // 태그 필터링 추가
   if (tag) {
     query = query.contains("tags", [tag]);
   }
@@ -45,7 +70,7 @@ export async function getTotalPostsCount(tag?: string): Promise<number> {
 
   if (error) {
     console.error("Error fetching posts count:", error);
-    return 0;
+    return filterByTag(getAllPostsFromMd(), tag).length;
   }
 
   return count || 0;
@@ -55,15 +80,18 @@ export async function getTotalPostsCount(tag?: string): Promise<number> {
  * 모든 공개 포스트를 가져옵니다 (페이지네이션 없음)
  */
 export async function getAllPosts(tag?: string): Promise<Post[]> {
+  if (!isSupabaseConfigured()) {
+    return filterByTag(getAllPostsFromMd(), tag);
+  }
+
   const supabase = createStaticClient();
-  
+
   let query = supabase
     .from("posts")
     .select("*")
     .eq("published", true)
     .order("published_at", { ascending: false });
 
-  // 태그 필터링 추가
   if (tag) {
     query = query.contains("tags", [tag]);
   }
@@ -72,7 +100,7 @@ export async function getAllPosts(tag?: string): Promise<Post[]> {
 
   if (error) {
     console.error("Error fetching all posts:", error);
-    return [];
+    return filterByTag(getAllPostsFromMd(), tag);
   }
 
   return data as Post[];
@@ -82,8 +110,12 @@ export async function getAllPosts(tag?: string): Promise<Post[]> {
  * 모든 포스트에서 사용된 고유 태그 목록을 가져옵니다.
  */
 export async function getAllTags(): Promise<string[]> {
+  if (!isSupabaseConfigured()) {
+    return getAllTagsFromMd();
+  }
+
   const supabase = createStaticClient();
-  
+
   const { data, error } = await supabase
     .from("posts")
     .select("tags")
@@ -91,16 +123,12 @@ export async function getAllTags(): Promise<string[]> {
 
   if (error) {
     console.error("Error fetching tags:", error);
-    return [];
+    return getAllTagsFromMd();
   }
 
-  // 모든 태그를 하나의 배열로 합치고 중복 제거
   const allTags = data
     .flatMap((post) => post.tags || [])
     .filter((tag): tag is string => tag !== null && tag !== undefined);
-  
-  // 중복 제거 및 정렬
-  const uniqueTags = Array.from(new Set(allTags)).sort();
 
-  return uniqueTags;
+  return Array.from(new Set(allTags)).sort();
 }
