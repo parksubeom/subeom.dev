@@ -2,7 +2,7 @@
 
 개인 포트폴리오 · 기술 블로그 (Next.js App Router + TypeScript).
 
-**Live:** [subeomdev.vercel.app](https://subeomdev.vercel.app) — 카드·모달로 전체를 보려면 [**/portfolio**](https://subeomdev.vercel.app/portfolio).
+**Live:** [subeomdev.vercel.app](https://subeomdev.vercel.app) — 또는 구글에 개발자 박수범 검색.
 
 ## 대표 프로젝트
 
