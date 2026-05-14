@@ -6,7 +6,7 @@
 export const SITE_URL = "https://subeomdev.vercel.app";
 
 export const SITE_NAME = "subeom.dev";
-export const SITE_TITLE = "subeom.dev | Frontend Developer";
+export const SITE_TITLE = "박수범 | Frontend Developer";
 export const SITE_DESCRIPTION =
   "비즈니스 임팩트를 고민하는 프론트엔드 개발자 박수범의 포트폴리오입니다.";
 export const SITE_AUTHOR = "박수범";
