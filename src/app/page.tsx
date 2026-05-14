@@ -62,7 +62,7 @@ export default async function Home() {
         {/* Hero — thesis + 컨설턴트 한 줄 + live stats */}
         <HeroSection />
 
-        {/* From the Threads — 요즘 생각 인용 3장 */}
+        {/* From the Threads — 요즘 고민·생각 한 편 */}
         <ThreadsQuotes />
 
         {/* AI Workflow — 지휘하는 개발자 방법론 */}
