@@ -4,48 +4,75 @@ import matter from "gray-matter";
 import { createStaticClient } from "@/shared/lib/supabase/static";
 import type { Project, ProjectDetail } from "@/entities/project/model/types";
 
+function parseIsoTime(iso: string | null | undefined): number {
+  if (!iso) return 0;
+  const n = new Date(iso).getTime();
+  return Number.isNaN(n) ? 0 : n;
+}
+
+function safeMtimeMs(filePath: string): number {
+  try {
+    return fs.statSync(filePath).mtimeMs;
+  } catch {
+    return 0;
+  }
+}
+
 function loadProjectsFromMarkdown(): Project[] {
   const dir = path.join(process.cwd(), "projects");
   if (!fs.existsSync(dir)) return [];
 
   const now = new Date().toISOString();
-  const rows: Project[] = [];
+  const withPaths: { project: Project; absPath: string }[] = [];
 
   for (const file of fs.readdirSync(dir)) {
     if (!file.endsWith(".md")) continue;
+    const absPath = path.join(dir, file);
     try {
-      const raw = fs.readFileSync(path.join(dir, file), "utf-8");
+      const raw = fs.readFileSync(absPath, "utf-8");
       const { data, content } = matter(raw);
       if (!data.title) continue;
-      rows.push({
-        id: file.replace(/\.md$/, ""),
-        title: data.title,
-        description: data.description ?? null,
-        long_description: content.trim() || null,
-        category: data.category ?? null,
-        status: data.status ?? null,
-        tech_stack: data.tech_stack ?? null,
-        github_url: data.github_url ?? null,
-        demo_url: data.demo_url ?? null,
-        thumbnail_url: data.thumbnail_url ?? null,
-        images: data.images ?? null,
-        featured: data.featured ?? false,
-        order: data.order ?? null,
-        start_date: data.start_date
-          ? new Date(data.start_date).toISOString()
-          : null,
-        end_date: data.end_date ? new Date(data.end_date).toISOString() : null,
-        created_at: now,
-        updated_at: now,
-        detailInfo: (data.detailInfo ?? null) as ProjectDetail,
-      } as unknown as Project);
+      withPaths.push({
+        absPath,
+        project: {
+          id: file.replace(/\.md$/, ""),
+          title: data.title,
+          description: data.description ?? null,
+          long_description: content.trim() || null,
+          category: data.category ?? null,
+          status: data.status ?? null,
+          tech_stack: data.tech_stack ?? null,
+          github_url: data.github_url ?? null,
+          demo_url: data.demo_url ?? null,
+          thumbnail_url: data.thumbnail_url ?? null,
+          images: data.images ?? null,
+          featured: data.featured ?? false,
+          order: data.order ?? null,
+          start_date: data.start_date
+            ? new Date(data.start_date).toISOString()
+            : null,
+          end_date: data.end_date ? new Date(data.end_date).toISOString() : null,
+          created_at: now,
+          updated_at: now,
+          detailInfo: (data.detailInfo ?? null) as ProjectDetail,
+        } as unknown as Project,
+      });
     } catch (e) {
       console.warn(`[get-projects] failed to parse ${file}:`, e);
     }
   }
 
-  rows.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
-  return rows;
+  // 최신순: 소스 수정 시각 → start_date (동일 시각이면 시작일이 늦은 쪽 우선)
+  withPaths.sort((a, b) => {
+    const ma = safeMtimeMs(a.absPath);
+    const mb = safeMtimeMs(b.absPath);
+    if (mb !== ma) return mb - ma;
+    const sa = parseIsoTime(a.project.start_date);
+    const sb = parseIsoTime(b.project.start_date);
+    return sb - sa;
+  });
+
+  return withPaths.map((x) => x.project);
 }
 
 function loadDetailInfoMap(): Map<string, ProjectDetail> {
@@ -80,7 +107,8 @@ export async function getProjects(): Promise<Project[]> {
   const { data, error } = await supabase
     .from("projects")
     .select("*")
-    .order("created_at", { ascending: false }); // 최신 순으로 정렬
+    .order("updated_at", { ascending: false })
+    .order("start_date", { ascending: false, nullsFirst: false });
 
   if (error) {
     console.error("Error fetching projects:", error);

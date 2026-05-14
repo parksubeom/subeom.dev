@@ -71,7 +71,7 @@ export default async function Home() {
         {/* Skills */}
         <SkillsSection />
 
-        {/* Featured Projects — 페인포인트 한 줄 띠와 함께 */}
+        {/* Featured Projects */}
         <FeaturedProjects projects={projects} />
 
         {/* Latest Articles */}
