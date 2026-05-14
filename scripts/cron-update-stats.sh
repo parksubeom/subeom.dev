@@ -7,6 +7,9 @@
 #
 #   0 9 * * * /Users/user/subeom.dev/scripts/cron-update-stats.sh
 #
+# 기본 자동 갱신은 GitHub Actions(.github/workflows/update-stats.yml) 가 담당합니다.
+# 로컬 cron 은 백업·강제 실행용으로 쓰면 됩니다.
+#
 # 로그: ~/.cache/subeom-stats.log
 # 실패해도 시스템에 영향 없도록 set -e + trap 으로 격리.
 
@@ -66,14 +69,15 @@ git reset --hard origin/main
 # 통계 갱신
 "$PNPM_BIN" update:stats
 
-# 변경 사항 검사
-if git diff --quiet projects/ posts/; then
+# 변경 사항 검사 (히어로 LIVE_STATS 는 src/shared/config/stats.ts)
+STATS_FILE="src/shared/config/stats.ts"
+if git diff --quiet "$STATS_FILE" projects/ posts/; then
   echo "✓ No changes — stats already up to date."
   exit 0
 fi
 
 # commit + push
-git add projects/ posts/
+git add "$STATS_FILE" projects/ posts/
 git commit -m "chore(stats): 자동 통계 갱신 ($(date '+%Y-%m-%d'))"
 git push origin main
 

@@ -1,0 +1,55 @@
+# 히어로 LIVE_STATS(src/shared/config/stats.ts) 및 관련 projects/posts 수치를
+# 매일 09:00 KST(00:00 UTC)에 API 기준으로 갱신하고 main 에 푸시합니다.
+#
+# Supabase 업로드(sync)는 기본적으로 건너뜁니다(SKIP_SUPABASE_SYNC).
+# DB까지 CI에서 맞추려면 저장소 Secrets 에 NEXT_PUBLIC_SUPABASE_URL,
+# SUPABASE_SERVICE_ROLE_KEY 를 추가하고 아래 env 블록에서 SKIP 을 제거하세요.
+
+name: Update live stats
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-stats
+  cancel-in-progress: true
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch APIs and rewrite stats + markdown
+        env:
+          SKIP_SUPABASE_SYNC: "1"
+        run: pnpm update:stats
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/shared/config/stats.ts projects/ posts/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git commit -m "chore(stats): 자동 통계 갱신 (workflow)"
+          git push

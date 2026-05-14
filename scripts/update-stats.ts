@@ -5,7 +5,8 @@
 //
 // 실행:  pnpm update:stats
 //
-// 이후 변경된 파일은 자동으로 `pnpm sync:projects` + `pnpm sync:posts` 도 트리거.
+// 이후 변경된 파일은 자동으로 `pnpm sync:projects` + `pnpm sync:posts` 도 트리거합니다.
+// CI(GitHub Actions) 등에서는 `SKIP_SUPABASE_SYNC=1` 로 동기화만 건너뛸 수 있습니다.
 
 import fs from "fs";
 import path from "path";
@@ -162,7 +163,7 @@ async function main() {
     "src/shared/config/stats.ts",
   );
   const statsContent = `// 자동 갱신되는 라이브 통계.
-// \`pnpm update:stats\` 가 매일 09:00 cron 으로 갱신하고, 이 파일을 그대로 덮어씁니다.
+// \`pnpm update:stats\` — GitHub Actions(매일 09:00 KST) 또는 로컬 cron 이 이 파일을 덮어씁니다.
 // 수동으로 손대지 마세요 — 다음 갱신 사이클에 덮어쓰입니다.
 
 export const LIVE_STATS = {
@@ -171,10 +172,12 @@ export const LIVE_STATS = {
   lastUpdated: "${new Date().toISOString()}",
 } as const;
 `;
+  let statsFileUpdated = false;
   if (fs.existsSync(statsTs)) {
     const prev = fs.readFileSync(statsTs, "utf-8");
     if (prev !== statsContent) {
       fs.writeFileSync(statsTs, statsContent);
+      statsFileUpdated = true;
       console.log("✅ src/shared/config/stats.ts  (live stats 갱신)");
     }
   }
@@ -207,25 +210,52 @@ export const LIVE_STATS = {
   }
 
   if (changed.length === 0) {
-    console.log("\n🎉 모든 수치가 이미 최신입니다.");
+    if (statsFileUpdated) {
+      console.log(
+        "\n🎉 히어로용 src/shared/config/stats.ts 만 갱신되었습니다. (projects/posts 마크다운은 이미 동일 수치)",
+      );
+      console.log("\n   git add src/shared/config/stats.ts");
+      console.log(
+        `   git commit -m "chore(stats): live stats (Open VSX ${fmt(sp.downloadCount)}, npm weekly ${di.weeklyDownloads})"`,
+      );
+      console.log("   git push origin main");
+    } else {
+      console.log("\n🎉 모든 수치가 이미 최신입니다. (stats.ts 포함)");
+    }
     return;
   }
 
+  const skipSync =
+    process.env.SKIP_SUPABASE_SYNC === "1" ||
+    process.env.SKIP_SUPABASE_SYNC === "true";
+
   // 자동 sync
-  console.log("\n🔄 Supabase 동기화...");
   const needsProjectSync = changed.some((p) => p.startsWith("projects/"));
   const needsPostSync = changed.some((p) => p.startsWith("posts/"));
 
-  if (needsProjectSync) {
-    execSync("pnpm sync:projects", { stdio: "inherit" });
-  }
-  if (needsPostSync) {
-    execSync("pnpm sync:posts", { stdio: "inherit" });
+  if (skipSync && (needsProjectSync || needsPostSync)) {
+    console.log(
+      "\n⚠️  SKIP_SUPABASE_SYNC=1 — Supabase 동기화는 건너뜁니다. DB 반영이 필요하면 로컬에서 pnpm sync:projects / sync:posts 를 실행하세요.",
+    );
+  } else {
+    console.log("\n🔄 Supabase 동기화...");
+    if (needsProjectSync) {
+      execSync("pnpm sync:projects", { stdio: "inherit" });
+    }
+    if (needsPostSync) {
+      execSync("pnpm sync:posts", { stdio: "inherit" });
+    }
   }
 
+  const gitAddPaths = [
+    ...(statsFileUpdated ? ["src/shared/config/stats.ts"] : []),
+    ...changed,
+  ];
   console.log("\n🎉 완료 — 변경된 파일을 commit 하면 라이브에도 반영됩니다.");
-  console.log("\n   git add " + changed.join(" "));
-  console.log(`   git commit -m "chore(stats): 통계 자동 갱신 (Open VSX ${fmt(sp.downloadCount)}, npm v${di.version} weekly ${di.weeklyDownloads})"`);
+  console.log("\n   git add " + gitAddPaths.join(" "));
+  console.log(
+    `   git commit -m "chore(stats): 통계 자동 갱신 (Open VSX ${fmt(sp.downloadCount)}, npm v${di.version} weekly ${di.weeklyDownloads})"`,
+  );
   console.log("   git push origin main");
 }
 
