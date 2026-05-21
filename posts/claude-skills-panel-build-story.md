@@ -136,7 +136,7 @@ GitHub Actions 로 `vX.Y.Z` 태그를 푸시하면 `vsce package` → Marketplac
 
 배포 직후의 작은 사이드 프로젝트치고는 분에 넘치는 반응을 받았다.
 
-- **Open VSX 누적 4,796 다운로드** (글 작성 시점, VS Code Marketplace 합산 4800+)
+- **Open VSX 누적 4,984 다운로드** (글 작성 시점, VS Code Marketplace 합산 5000+)
 - **평점 5.0/5.0** (리뷰 1건이지만 만점)
 - **243+ 플러그인이 검색 가능한 통합 마켓플레이스 브라우저** 기능에 대한 긍정 피드백
 
