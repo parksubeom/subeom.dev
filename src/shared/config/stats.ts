@@ -3,7 +3,7 @@
 // 수동으로 손대지 마세요 — 다음 갱신 사이클에 덮어쓰입니다.
 
 export const LIVE_STATS = {
-  openVsxDownloads: 5490,
-  npmWeeklyDownloads: 18,
-  lastUpdated: "2026-05-23T02:06:34.040Z",
+  openVsxDownloads: 5534,
+  npmWeeklyDownloads: 15,
+  lastUpdated: "2026-05-24T02:14:56.221Z",
 } as const;
