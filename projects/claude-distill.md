@@ -229,7 +229,7 @@ detailInfo:
         - **MIT License** — 50KB 미만 코드 그대로 [GitHub](https://github.com/parksubeom/claude-distill)에서 검수 가능
     - title: "성과 / 임팩트"
       content: |
-        - **v0.4.1 npm 정식 배포** ([npmjs.com/package/claude-distill](https://www.npmjs.com/package/claude-distill)) — 첫 배포 후 3일 만에 **주간 14 다운로드**
+        - **v0.4.1 npm 정식 배포** ([npmjs.com/package/claude-distill](https://www.npmjs.com/package/claude-distill)) — 첫 배포 후 3일 만에 **주간 13 다운로드**
         - **언팩 크기 61.4 KB · 13 파일 · 의존성 0개** — 사용자 머신 부담 0
         - **세션당 평균 비용 ~$0** (4단 게이트 차단 시), 게이트 통과 시에만 ~$0.10
         - **별도 서버 X · 락인 X** — 본인 머신 ↔ Anthropic API 직통, plain markdown 결과
