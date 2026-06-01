@@ -5,5 +5,5 @@
 export const LIVE_STATS = {
   openVsxDownloads: 5774,
   npmWeeklyDownloads: 12,
-  lastUpdated: "2026-05-31T02:34:09.716Z",
+  lastUpdated: "2026-06-01T02:43:41.777Z",
 } as const;
