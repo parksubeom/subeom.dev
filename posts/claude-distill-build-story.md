@@ -1,7 +1,7 @@
 ---
 slug: "claude-distill-build-story"
 title: "Claude에게 같은 함정을 세 번째 설명하다가 만든 npm CLI — claude-distill 개발기"
-excerpt: "매 세션 휘발되는 결정·페일·노하우를 자동 누적하는 Stop hook 기반 글로벌 CLI. 4단 게이트로 비용 ~10× 절감하고, 첫 배포 3일 만에 주간 23 다운로드를 기록했다."
+excerpt: "매 세션 휘발되는 결정·페일·노하우를 자동 누적하는 Stop hook 기반 글로벌 CLI. 4단 게이트로 비용 ~10× 절감하고, 첫 배포 3일 만에 주간 21 다운로드를 기록했다."
 tags: ["Claude Code", "npm CLI", "Anthropic API", "Hooks", "Meta Tooling", "i18n"]
 date: "2026-05-11"
 ---
@@ -167,7 +167,7 @@ dataset 의 ~3% 만 promptId 가 채워져 있고 나머지 97% 는 null. 매칭
 ## 임팩트 — 첫 주 233 다운로드
 
 - v0.4.1 npm 정식 배포 ([npmjs.com/package/claude-distill](https://www.npmjs.com/package/claude-distill))
-- 첫 배포 후 3일 만에 **주간 23 다운로드**
+- 첫 배포 후 3일 만에 **주간 21 다운로드**
 - 의존성 0개 · 61KB · 본인 머신에서 실행
 - 4단 게이트로 세션당 평균 비용 ~$0
 - ko/en i18n 자동 분기
