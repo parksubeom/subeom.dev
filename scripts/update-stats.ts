@@ -226,7 +226,8 @@ async function main() {
 
 export const LIVE_STATS = {
   openVsxDownloads: ${sp.downloadCount},
-  npmWeeklyDownloads: ${di.weeklyDownloads},
+  // npm 주간 다운로드 합산 — claude-distill(${di.weeklyDownloads}) + bumpist-code(${bp.weeklyDownloads})
+  npmWeeklyDownloads: ${di.weeklyDownloads + bp.weeklyDownloads},
   lastUpdated: "${new Date().toISOString()}",
 } as const;
 `;
