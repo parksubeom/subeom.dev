@@ -26,6 +26,13 @@ interface DistillStats {
   fileCount: number;
 }
 
+interface BumpistStats {
+  version: string;
+  weeklyDownloads: number;
+  unpackedSize: number;
+  fileCount: number;
+}
+
 async function fetchSkillsPanel(): Promise<SkillsPanelStats> {
   const url = "https://open-vsx.org/api/parksubeom/claude-skills-panel";
   const res = await fetch(url);
@@ -39,17 +46,25 @@ async function fetchSkillsPanel(): Promise<SkillsPanelStats> {
   };
 }
 
-async function fetchDistill(): Promise<DistillStats> {
-  const regUrl = "https://registry.npmjs.org/claude-distill";
-  const regRes = await fetch(regUrl);
-  if (!regRes.ok) throw new Error(`npm registry fetch failed: ${regRes.status}`);
+// npm 패키지 하나의 최신 버전 · 주간 다운로드 · 언팩 크기/파일 수 수집 (공용)
+async function fetchNpmStats(pkg: string): Promise<{
+  version: string;
+  weeklyDownloads: number;
+  unpackedSize: number;
+  fileCount: number;
+}> {
+  const regRes = await fetch(`https://registry.npmjs.org/${pkg}`);
+  if (!regRes.ok)
+    throw new Error(`npm registry fetch failed (${pkg}): ${regRes.status}`);
   const reg = await regRes.json();
   const latest = reg["dist-tags"].latest;
   const dist = reg.versions[latest].dist;
 
-  const dlUrl = "https://api.npmjs.org/downloads/point/last-week/claude-distill";
-  const dlRes = await fetch(dlUrl);
-  if (!dlRes.ok) throw new Error(`npm downloads fetch failed: ${dlRes.status}`);
+  const dlRes = await fetch(
+    `https://api.npmjs.org/downloads/point/last-week/${pkg}`,
+  );
+  if (!dlRes.ok)
+    throw new Error(`npm downloads fetch failed (${pkg}): ${dlRes.status}`);
   const dl = await dlRes.json();
 
   return {
@@ -58,6 +73,14 @@ async function fetchDistill(): Promise<DistillStats> {
     unpackedSize: dist.unpackedSize,
     fileCount: dist.fileCount,
   };
+}
+
+async function fetchDistill(): Promise<DistillStats> {
+  return fetchNpmStats("claude-distill");
+}
+
+async function fetchBumpist(): Promise<BumpistStats> {
+  return fetchNpmStats("bumpist-code");
 }
 
 // 천 단위 콤마 포맷
@@ -69,7 +92,11 @@ const round100 = (n: number) => `${Math.floor(n / 100) * 100 + 100}+`;
 type Replacement = { pattern: RegExp; replace: string };
 
 // === 치환 규칙 ===
-function buildReplacements(sp: SkillsPanelStats, di: DistillStats): {
+function buildReplacements(
+  sp: SkillsPanelStats,
+  di: DistillStats,
+  bp: BumpistStats,
+): {
   [filepath: string]: Replacement[];
 } {
   const downloads = fmt(sp.downloadCount);
@@ -119,6 +146,28 @@ function buildReplacements(sp: SkillsPanelStats, di: DistillStats): {
         replace: `npm v${di.version}`,
       },
     ],
+    "projects/bumpist-code.md": [
+      // description / period 의 npm 버전
+      {
+        pattern: /npm v\d+\.\d+\.\d+/g,
+        replace: `npm v${bp.version}`,
+      },
+      // period · 성과의 주간 다운로드
+      {
+        pattern: /주간 [\d,]+ 다운로드/g,
+        replace: `주간 ${fmt(bp.weeklyDownloads)} 다운로드`,
+      },
+      // period 의 언팩 크기 (· 223KB))
+      {
+        pattern: /· \d+KB\)/g,
+        replace: `· ${Math.round(bp.unpackedSize / 1024)}KB)`,
+      },
+      // 성과 섹션의 언팩 크기 (언팩 크기 223KB)
+      {
+        pattern: /언팩 크기 \d+KB/g,
+        replace: `언팩 크기 ${Math.round(bp.unpackedSize / 1024)}KB`,
+      },
+    ],
     "posts/claude-skills-panel-build-story.md": [
       {
         pattern:
@@ -145,7 +194,11 @@ function buildReplacements(sp: SkillsPanelStats, di: DistillStats): {
 
 async function main() {
   console.log("📡 통계 수집 중...\n");
-  const [sp, di] = await Promise.all([fetchSkillsPanel(), fetchDistill()]);
+  const [sp, di, bp] = await Promise.all([
+    fetchSkillsPanel(),
+    fetchDistill(),
+    fetchBumpist(),
+  ]);
 
   console.log("=== Claude Code Skills Panel (Open VSX) ===");
   console.log(`  downloads: ${fmt(sp.downloadCount)}`);
@@ -156,6 +209,11 @@ async function main() {
   console.log(`  version: ${di.version}`);
   console.log(`  weekly: ${di.weeklyDownloads}`);
   console.log(`  size: ${(di.unpackedSize / 1024).toFixed(1)} KB · ${di.fileCount} files\n`);
+
+  console.log("=== bumpist-code (npm) ===");
+  console.log(`  version: ${bp.version}`);
+  console.log(`  weekly: ${bp.weeklyDownloads}`);
+  console.log(`  size: ${(bp.unpackedSize / 1024).toFixed(1)} KB · ${bp.fileCount} files\n`);
 
   // 라이브 통계 config 파일을 매번 덮어씀 (Hero 컴포넌트가 import).
   const statsTs = path.join(
@@ -182,7 +240,7 @@ export const LIVE_STATS = {
     }
   }
 
-  const replacements = buildReplacements(sp, di);
+  const replacements = buildReplacements(sp, di, bp);
   const root = process.cwd();
   const changed: string[] = [];
 

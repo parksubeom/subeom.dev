@@ -8,6 +8,7 @@
 
 한 줄·링크는 [`projects/`](./projects/) 의 `title` · `description` · `demo_url` · `github_url` 과 맞춰 둡니다.
 
+- **[bumpist-code](https://www.npmjs.com/package/bumpist-code)** — `npx bumpist-code@latest init` 한 줄로 Vue·React·Next.js에 FSD·디자인 베이스라인·WCAG AA·Claude Code 스킬 14종을 세팅하는 프론트엔드 표준 배포 CLI. [GitHub](https://github.com/parksubeom/bumpist-fe-guide)
 - **[Claude Code Skills Panel](https://open-vsx.org/extension/parksubeom/claude-skills-panel)** — Claude Code 슬래시 커맨드를 패널에서 클릭 한 번으로 실행하는 VS Code 확장. [GitHub](https://github.com/parksubeom/claude-skills-panel)
 - **[claude-distill](https://www.npmjs.com/package/claude-distill)** — Claude Code Stop hook으로 세션 인수인계 노트를 자동 기록하는 npm CLI. [GitHub](https://github.com/parksubeom/claude-distill)
 - **[AI 협업 포트폴리오 (subeom.dev)](https://subeomdev.vercel.app)** — Next.js·FSD·Supabase 기반 포트폴리오·기술 블로그(이 저장소가 빌드하는 사이트). [GitHub](https://github.com/parksubeom/subeom.dev)
