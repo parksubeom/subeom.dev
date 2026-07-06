@@ -19,7 +19,7 @@ const STATS: { label: string; value: string; caption: string }[] = [
   {
     label: "npm weekly",
     value: fmt(LIVE_STATS.npmWeeklyDownloads),
-    caption: "claude-distill · bumpist-code · 지난 7일",
+    caption: "npm 패키지 합산 · 지난 7일",
   },
 ];
 

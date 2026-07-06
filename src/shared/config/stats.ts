@@ -4,7 +4,7 @@
 
 export const LIVE_STATS = {
   openVsxDownloads: 6944,
-  // npm 주간 다운로드 합산 — claude-distill(20) + bumpist-code(973)
+  // npm 주간 다운로드 합산 (maintainer:bumpist 전체 패키지) — bumpist-code(973) + claude-distill(20)
   npmWeeklyDownloads: 993,
-  lastUpdated: "2026-07-06T03:12:24.033Z",
+  lastUpdated: "2026-07-06T04:56:34.184Z",
 } as const;

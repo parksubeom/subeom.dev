@@ -83,6 +83,46 @@ async function fetchBumpist(): Promise<BumpistStats> {
   return fetchNpmStats("bumpist-code");
 }
 
+// maintainer:bumpist 의 모든 npm 패키지 주간 다운로드 합산 (자동 — 새 패키지도 손 안 대고 포함).
+// 검색/다운로드 API 실패 시 fallback(알려진 패키지) 합산으로 degrade 해 통계 갱신이 깨지지 않게 함.
+async function fetchNpmWeeklyTotal(
+  fallback: { name: string; weekly: number }[],
+): Promise<{ total: number; breakdown: { name: string; weekly: number }[] }> {
+  const finalize = (breakdown: { name: string; weekly: number }[]) => {
+    const sorted = [...breakdown].sort((a, b) => b.weekly - a.weekly);
+    return { total: sorted.reduce((s, b) => s + b.weekly, 0), breakdown: sorted };
+  };
+  try {
+    const searchRes = await fetch(
+      "https://registry.npmjs.org/-/v1/search?text=maintainer:bumpist&size=100",
+    );
+    if (!searchRes.ok) throw new Error(`npm search failed: ${searchRes.status}`);
+    const search = await searchRes.json();
+    const names: string[] = (search.objects ?? []).map(
+      (o: { package: { name: string } }) => o.package.name,
+    );
+    if (names.length === 0) throw new Error("npm search returned 0 packages");
+
+    const breakdown = await Promise.all(
+      names.map(async (name) => {
+        const dlRes = await fetch(
+          `https://api.npmjs.org/downloads/point/last-week/${name}`,
+        );
+        if (!dlRes.ok)
+          throw new Error(`npm downloads failed (${name}): ${dlRes.status}`);
+        const dl = await dlRes.json();
+        return { name, weekly: dl.downloads as number };
+      }),
+    );
+    return finalize(breakdown);
+  } catch (err) {
+    console.warn(
+      `⚠️  npm 전체 합산 실패 — 알려진 패키지로 fallback: ${(err as Error).message}`,
+    );
+    return finalize(fallback);
+  }
+}
+
 // 천 단위 콤마 포맷
 const fmt = (n: number) => n.toLocaleString("en-US");
 
@@ -215,6 +255,15 @@ async function main() {
   console.log(`  weekly: ${bp.weeklyDownloads}`);
   console.log(`  size: ${(bp.unpackedSize / 1024).toFixed(1)} KB · ${bp.fileCount} files\n`);
 
+  // 홈 히어로 'npm weekly' 타일 = bumpist 계정 전체 패키지 주간 다운로드 합산
+  const npm = await fetchNpmWeeklyTotal([
+    { name: "claude-distill", weekly: di.weeklyDownloads },
+    { name: "bumpist-code", weekly: bp.weeklyDownloads },
+  ]);
+  const npmBreakdown = npm.breakdown.map((b) => `${b.name}(${b.weekly})`).join(" + ");
+  console.log("=== npm weekly 합산 (maintainer:bumpist 전체) ===");
+  console.log(`  ${npmBreakdown} = ${npm.total}\n`);
+
   // 라이브 통계 config 파일을 매번 덮어씀 (Hero 컴포넌트가 import).
   const statsTs = path.join(
     process.cwd(),
@@ -226,8 +275,8 @@ async function main() {
 
 export const LIVE_STATS = {
   openVsxDownloads: ${sp.downloadCount},
-  // npm 주간 다운로드 합산 — claude-distill(${di.weeklyDownloads}) + bumpist-code(${bp.weeklyDownloads})
-  npmWeeklyDownloads: ${di.weeklyDownloads + bp.weeklyDownloads},
+  // npm 주간 다운로드 합산 (maintainer:bumpist 전체 패키지) — ${npmBreakdown}
+  npmWeeklyDownloads: ${npm.total},
   lastUpdated: "${new Date().toISOString()}",
 } as const;
 `;
