@@ -3,8 +3,8 @@
 // 수동으로 손대지 마세요 — 다음 갱신 사이클에 덮어쓰입니다.
 
 export const LIVE_STATS = {
-  openVsxDownloads: 6974,
-  // npm 주간 다운로드 합산 — claude-distill(18) + bumpist-code(1003)
-  npmWeeklyDownloads: 1021,
-  lastUpdated: "2026-07-09T01:59:50.021Z",
+  openVsxDownloads: 6982,
+  // npm 주간 다운로드 합산 — claude-distill(15) + bumpist-code(1257)
+  npmWeeklyDownloads: 1272,
+  lastUpdated: "2026-07-10T01:58:14.923Z",
 } as const;
