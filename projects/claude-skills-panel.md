@@ -1,6 +1,6 @@
 ---
 title: "Claude Code Skills Panel"
-description: "Claude Code 슬래시 커맨드를 한 번의 클릭으로 실행하는 VS Code 확장. Open VSX 7,088 다운로드 · 평점 5.0, 7일 만에 v0.44.6, 4개 IDE · 4개 언어 배포."
+description: "Claude Code 슬래시 커맨드를 한 번의 클릭으로 실행하는 VS Code 확장. Open VSX 7,164 다운로드 · 평점 5.0, 7일 만에 v0.44.6, 4개 IDE · 4개 언어 배포."
 category: "Developer Tools"
 status: "active"
 tech_stack:
@@ -121,7 +121,7 @@ detailInfo:
         10개 클래스 공격 모션을 단일 `ATTACK_EFFECTS` 맵 + 3개 키프레임(`projectile`/`melee`/`aura`)으로 추상화. CSS Custom Properties(`--dx`, `--dy`)로 발사체 궤적 계산 → 코드 한 줄로 새 공격 정의 가능.
     - title: "성과"
       content: |
-        - **Open VSX 7,088 다운로드 · 평점 5/5.0** (VS Code Marketplace 합산 누적 7100+)
+        - **Open VSX 7,164 다운로드 · 평점 5/5.0** (VS Code Marketplace 합산 누적 7200+)
         - **7일 만에 v0.20.0(MVP) → v0.44.6** — 33개 버전을 Open VSX에 게시, GitHub Actions 자동 배포로 수동 작업 0
         - **4개 IDE × 2개 마켓플레이스** 배포 (VS Code · Cursor · Windsurf · VSCodium / VS Code Marketplace · OpenVSX)
         - **4개 언어 i18n 220+ 키** (en/ko/ja/zh) — 키 파리티 검증 스크립트로 회귀 방지
