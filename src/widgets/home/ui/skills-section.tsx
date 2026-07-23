@@ -5,9 +5,9 @@ import { Badge } from "@/shared/ui/badge";
 
 // 이력서 기반 실제 데이터
 const skills = {
-  Frontend: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Zustand"],
+  Frontend: ["React", "Next.js", "Vue.js", "TypeScript", "Tailwind CSS", "Framer Motion", "Zustand", "Pinia", "Three.js"],
   Backend: ["Node.js", "Supabase", "NestJS"],
-  Tools: ["Git", "Figma", "Vercel", "Chrome DevTools"],
+  Tools: ["Git", "Figma", "Vercel", "Playwright", "Chrome DevTools"],
 };
 
 export function SkillsSection() {
