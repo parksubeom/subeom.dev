@@ -18,6 +18,6 @@ export const PROFILE = {
   ],
 
   skills: [
-    "React", "Next.js", "TypeScript", "Tailwind CSS", "Supabase", "Framer Motion",
+    "React", "Next.js", "Vue.js", "TypeScript", "Tailwind CSS", "Pinia", "Supabase", "Framer Motion",
   ],
 } as const;
