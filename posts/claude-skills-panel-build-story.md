@@ -22,7 +22,7 @@ Claude Code는 모든 기능을 슬래시 커맨드로 트리거하는 구조다
 2. 발견한 커맨드를 카드 그리드로 렌더링
 3. 클릭하면 클립보드에 `/command-name` 복사
 
-VS Code Extension API의 Webview만으로 충분했다. 단일 `extension.js` 약 200줄. 일주일 뒤 1,700줄이 될 거라고는 그때 예상하지 못했다.
+VS Code Extension API의 Webview(확장 안에서 HTML/CSS/JS로 화면을 그리는 작은 브라우저 창)만으로 충분했다. 단일 `extension.js` 약 200줄. 일주일 뒤 1,700줄이 될 거라고는 그때 예상하지 못했다.
 
 ## v0.39 — Auto 모드의 실패
 
