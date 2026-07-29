@@ -2,30 +2,11 @@
 
 import * as React from "react";
 
-// MathCanvas 히스토리 압축 개발기 전용 차트 (dev 실측값)
-type Pt = { n: number; before: number; after: number };
-
-const A: Pt[] = [
-  { n: 3, before: 1142.6, after: 4.8 },
-  { n: 5, before: 1449.7, after: 5.5 },
-  { n: 7, before: 1718.6, after: 6.1 },
-  { n: 9, before: 1901.8, after: 6.4 },
-  { n: 13, before: 2517.9, after: 7.5 },
-  { n: 18, before: 3753.5, after: 9.1 },
-  { n: 20, before: 3754.8, after: 9.3 },
-];
-
-const B: Pt[] = [
-  { n: 1, before: 17.7, after: 3.9 },
-  { n: 3, before: 22.6, after: 4.2 },
-  { n: 6, before: 37.8, after: 5.0 },
-  { n: 8, before: 50.8, after: 5.3 },
-  { n: 12, before: 89.4, after: 7.4 },
-  { n: 16, before: 160.8, after: 9.5 },
-  { n: 20, before: 231.3, after: 11.3 },
-  { n: 25, before: 329.5, after: 13.3 },
-  { n: 33, before: 436.0, after: 16.4 },
-];
+// 개선 전/후 저장 크기 비교 라인차트 (재사용형).
+// 마크다운 코드펜스 ```compression-chart 안의 JSON 으로 데이터를 주입한다:
+//   { "charts": [ { "title": "...", "subtitle": "...", "data": [ { "n", "before", "after" } ] } ] }
+export type DeltaPoint = { n: number; before: number; after: number };
+export type ChartSpec = { title: string; subtitle?: string; data: DeltaPoint[] };
 
 const BEFORE = "#eb6834"; // 개선 전 (주황)
 const AFTER = "#2a78d6"; // 개선 후 (파랑)
@@ -33,15 +14,7 @@ const AFTER = "#2a78d6"; // 개선 후 (파랑)
 const fmt = (kb: number) =>
   kb >= 1000 ? `${(kb / 1024).toFixed(2)} MB` : `${Math.round(kb)} KB`;
 
-function LineChart({
-  title,
-  subtitle,
-  data,
-}: {
-  title: string;
-  subtitle: string;
-  data: Pt[];
-}) {
+function LineChart({ title, subtitle, data }: ChartSpec) {
   const [hover, setHover] = React.useState<number | null>(null);
 
   const W = 860,
@@ -49,14 +22,14 @@ function LineChart({
   const m = { t: 18, r: 96, b: 40, l: 62 };
   const iw = W - m.l - m.r,
     ih = H - m.t - m.b;
-  const maxY = Math.max(...data.map((d) => d.before)) * 1.08;
+  const maxY = Math.max(...data.map((d) => d.before)) * 1.08 || 1;
   const minX = data[0].n,
     maxX = data[data.length - 1].n;
-  const x = (n: number) => m.l + ((n - minX) / (maxX - minX)) * iw;
+  const span = maxX - minX || 1;
+  const x = (n: number) => m.l + ((n - minX) / span) * iw;
   const y = (v: number) => m.t + ih - (v / maxY) * ih;
 
-  const ticksY = 4;
-  const gridY = Array.from({ length: ticksY + 1 }, (_, i) => (maxY / ticksY) * i);
+  const gridY = Array.from({ length: 5 }, (_, i) => (maxY / 4) * i);
   const linePath = (key: "before" | "after") =>
     data
       .map((d, i) => `${i ? "L" : "M"}${x(d.n).toFixed(1)},${y(d[key]).toFixed(1)}`)
@@ -78,7 +51,7 @@ function LineChart({
     <div className="rounded-xl border border-border bg-card p-4 sm:p-5">
       <div className="mb-1 text-sm font-semibold text-foreground">{title}</div>
       <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
-        <span>{subtitle}</span>
+        {subtitle && <span>{subtitle}</span>}
         <span className="inline-flex items-center gap-1.5">
           <span
             className="inline-block h-[3px] w-3.5 rounded"
@@ -91,7 +64,7 @@ function LineChart({
             className="inline-block h-[3px] w-3.5 rounded"
             style={{ background: AFTER }}
           />
-          개선 후 (델타+압축)
+          개선 후 (strip+델타+gzip)
         </span>
       </div>
       <div className="relative text-muted-foreground">
@@ -160,10 +133,26 @@ function LineChart({
           <path d={linePath("before")} fill="none" stroke={BEFORE} strokeWidth={2} />
           <path d={linePath("after")} fill="none" stroke={AFTER} strokeWidth={2.5} />
           {data.map((d) => (
-            <circle key={`b${d.n}`} cx={x(d.n)} cy={y(d.before)} r={3.5} fill={BEFORE} />
+            <circle
+              key={`b${d.n}`}
+              cx={x(d.n)}
+              cy={y(d.before)}
+              r={4}
+              fill={BEFORE}
+              stroke="var(--background)"
+              strokeWidth={2}
+            />
           ))}
           {data.map((d) => (
-            <circle key={`a${d.n}`} cx={x(d.n)} cy={y(d.after)} r={3.5} fill={AFTER} />
+            <circle
+              key={`a${d.n}`}
+              cx={x(d.n)}
+              cy={y(d.after)}
+              r={4}
+              fill={AFTER}
+              stroke="var(--background)"
+              strokeWidth={2}
+            />
           ))}
           <text
             x={x(last.n) + 10}
@@ -219,19 +208,16 @@ function LineChart({
   );
 }
 
-export function CompressionChart() {
+export function CompressionChart({ charts }: { charts: ChartSpec[] }) {
+  const valid = (charts ?? []).filter(
+    (c) => c && Array.isArray(c.data) && c.data.length > 0,
+  );
+  if (valid.length === 0) return null;
   return (
     <div className="not-prose my-8 space-y-4">
-      <LineChart
-        title="시나리오 A — 3D 교구 대량 슬라이드"
-        subtitle="조작 20개 시점 3,755KB → 9.3KB (405배)"
-        data={A}
-      />
-      <LineChart
-        title="시나리오 B — 일반 슬라이드"
-        subtitle="조작 33개 시점 436KB → 16.4KB (26.6배)"
-        data={B}
-      />
+      {valid.map((c, i) => (
+        <LineChart key={i} title={c.title} subtitle={c.subtitle} data={c.data} />
+      ))}
     </div>
   );
 }

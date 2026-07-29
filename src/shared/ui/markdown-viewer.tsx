@@ -4,12 +4,31 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import { isValidElement } from "react";
-import { CompressionChart } from "@/shared/ui/compression-chart";
+import { isValidElement, type ReactNode } from "react";
+import { CompressionChart, type ChartSpec } from "@/shared/ui/compression-chart";
 
-// ```<lang> 코드펜스 → 커스텀 컴포넌트 매핑 (그 외 코드블록은 기본 렌더 유지)
-const FENCE_COMPONENTS: Record<string, () => React.ReactNode> = {
-  "language-compression-chart": () => <CompressionChart />,
+// 코드펜스 <code> 자식에서 원문 텍스트(펜스 본문) 추출
+function fenceText(child: unknown): string {
+  if (!isValidElement(child)) return "";
+  const kids = (child.props as { children?: unknown }).children;
+  if (typeof kids === "string") return kids;
+  if (Array.isArray(kids)) return kids.filter((k) => typeof k === "string").join("");
+  return kids == null ? "" : String(kids);
+}
+
+// ```<lang> 코드펜스 → 커스텀 컴포넌트 렌더러 (본문 JSON 을 파싱해 주입).
+// 파싱 실패/미지원 언어는 null 을 반환해 기본 <pre> 로 폴백.
+const FENCE_RENDERERS: Record<string, (body: string) => ReactNode> = {
+  "language-compression-chart": (body) => {
+    try {
+      const parsed = JSON.parse(body);
+      const charts: ChartSpec[] = Array.isArray(parsed) ? parsed : parsed?.charts;
+      if (!Array.isArray(charts)) return null;
+      return <CompressionChart charts={charts} />;
+    } catch {
+      return null;
+    }
+  },
 };
 
 interface MarkdownViewerProps {
@@ -60,10 +79,13 @@ export function MarkdownViewer({ content }: MarkdownViewerProps) {
               const cls = isValidElement(child)
                 ? (child.props as { className?: string }).className ?? ""
                 : "";
-              const key = Object.keys(FENCE_COMPONENTS).find((k) =>
+              const key = Object.keys(FENCE_RENDERERS).find((k) =>
                 cls.includes(k),
               );
-              if (key) return <>{FENCE_COMPONENTS[key]()}</>;
+              if (key) {
+                const rendered = FENCE_RENDERERS[key](fenceText(child));
+                if (rendered != null) return <>{rendered}</>;
+              }
               return <pre {...props}>{children}</pre>;
             },
           }}
