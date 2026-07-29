@@ -17,9 +17,11 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 const LENSES = [
   {
     title: "AI 도구로 페인 포인트를 풉니다.",
-    body: `Claude Code Skills Panel — Open VSX ${fmt(
-      LIVE_STATS.openVsxDownloads,
-    )} 다운로드 · 평점 5.0. npm 패키지(bumpist-code · claude-distill) 주간 합산 ${fmt(
+    body: `Claude Code Skills Panel — 누적 ${fmt(
+      LIVE_STATS.extensionDownloads,
+    )} 다운로드(Open VSX ${fmt(LIVE_STATS.openVsxDownloads)} + VS Code Marketplace ${fmt(
+      LIVE_STATS.vscodeMarketplaceDownloads,
+    )}) · 평점 5.0. npm 패키지(bumpist-code · claude-distill) 주간 합산 ${fmt(
       LIVE_STATS.npmWeeklyDownloads,
     )} 다운로드. bumpist-code 는 npx 한 줄로 Vue·React·Next.js 에 표준 컨벤션·디자인·Claude Code 스킬 14종을 세팅하는 프론트엔드 표준 배포 CLI 예요. 본인 페인 포인트에서 시작해 LLM 비용을 4단 게이트로 약 90% 절감하는 모델까지 직접 설계합니다.`,
   },

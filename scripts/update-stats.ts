@@ -1,7 +1,7 @@
 // scripts/update-stats.ts
 //
-// Skills Panel (Open VSX) · claude-distill (npm) 의 실시간 통계를 수집해
-// 프로젝트 마크다운 + 블로그 글의 수치를 자동 갱신합니다.
+// Skills Panel (Open VSX + VS Code Marketplace) · claude-distill (npm) 의
+// 실시간 통계를 수집해 프로젝트 마크다운 + 블로그 글의 수치를 자동 갱신합니다.
 //
 // 실행:  pnpm update:stats
 //
@@ -16,6 +16,16 @@ interface SkillsPanelStats {
   downloadCount: number;
   averageRating: number;
   reviewCount: number;
+  version: string;
+}
+
+interface MarketplaceStats {
+  // VS Code Marketplace 는 '신규 설치'와 '업데이트 설치'를 분리 집계합니다.
+  // Open VSX 의 downloadCount(= .vsix 다운로드 총량)와 같은 축으로 맞추려면
+  // install + updateCount 를 더해야 합니다. (shields.io 의 downloads 배지와 동일 규칙)
+  installs: number;
+  updateCount: number;
+  downloadCount: number;
   version: string;
 }
 
@@ -43,6 +53,54 @@ async function fetchSkillsPanel(): Promise<SkillsPanelStats> {
     averageRating: data.averageRating,
     reviewCount: data.reviewCount,
     version: data.version,
+  };
+}
+
+// VS Code Marketplace 는 공개 REST API 가 없어 gallery extensionquery(POST)를 사용합니다.
+// flags 914 = IncludeVersions | IncludeStatistics | ... (통계 포함 조회)
+async function fetchVsCodeMarketplace(): Promise<MarketplaceStats> {
+  const res = await fetch(
+    "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery",
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json;api-version=3.0-preview.1",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        filters: [
+          {
+            // filterType 7 = ExtensionName (publisher.extension 정확 일치)
+            criteria: [
+              { filterType: 7, value: "parksubeom.claude-skills-panel" },
+            ],
+            pageNumber: 1,
+            pageSize: 1,
+          },
+        ],
+        flags: 914,
+      }),
+    },
+  );
+  if (!res.ok)
+    throw new Error(`VS Code Marketplace fetch failed: ${res.status}`);
+  const data = await res.json();
+  const ext = data?.results?.[0]?.extensions?.[0];
+  if (!ext) throw new Error("VS Code Marketplace: extension not found");
+
+  const stat = (name: string) =>
+    (
+      ext.statistics as { statisticName: string; value: number }[] | undefined
+    )?.find((s) => s.statisticName === name)?.value ?? 0;
+
+  const installs = Math.round(stat("install"));
+  const updateCount = Math.round(stat("updateCount"));
+
+  return {
+    installs,
+    updateCount,
+    downloadCount: installs + updateCount,
+    version: ext.versions?.[0]?.version ?? "",
   };
 }
 
@@ -126,34 +184,33 @@ async function fetchNpmWeeklyTotal(
 // 천 단위 콤마 포맷
 const fmt = (n: number) => n.toLocaleString("en-US");
 
-// 1000 단위 어림 (3,762 → 3,800+)
-const round100 = (n: number) => `${Math.floor(n / 100) * 100 + 100}+`;
-
 type Replacement = { pattern: RegExp; replace: string };
 
 // === 치환 규칙 ===
 function buildReplacements(
   sp: SkillsPanelStats,
+  mp: MarketplaceStats,
   di: DistillStats,
   bp: BumpistStats,
 ): {
   [filepath: string]: Replacement[];
 } {
-  const downloads = fmt(sp.downloadCount);
-  const rounded = round100(sp.downloadCount);
+  // 확장 다운로드 = Open VSX + VS Code Marketplace 합산
+  const total = fmt(sp.downloadCount + mp.downloadCount);
+  const breakdown = `Open VSX ${fmt(sp.downloadCount)} + VS Code Marketplace ${fmt(mp.downloadCount)}`;
 
   return {
     "projects/claude-skills-panel.md": [
-      // description 의 "Open VSX X,XXX 다운로드"
+      // description 의 "누적 X,XXX 다운로드 (Open VSX + VS Code Marketplace)"
       {
-        pattern: /Open VSX [\d,]+(\+)? 다운로드/g,
-        replace: `Open VSX ${downloads} 다운로드`,
+        pattern: /누적 [\d,]+(\+)? 다운로드 \(Open VSX \+ VS Code Marketplace\)/g,
+        replace: `누적 ${total} 다운로드 (Open VSX + VS Code Marketplace)`,
       },
-      // 성과 섹션의 평점 합산 라인
+      // 성과 섹션의 합산 + 평점 라인
       {
         pattern:
-          /\*\*Open VSX [\d,]+ 다운로드 · 평점 [\d.]+\/5\.0\*\* \(VS Code Marketplace 합산 누적 [^)]+\)/g,
-        replace: `**Open VSX ${downloads} 다운로드 · 평점 ${sp.averageRating}/5.0** (VS Code Marketplace 합산 누적 ${rounded})`,
+          /\*\*누적 [\d,]+ 다운로드 · 평점 [\d.]+\/5\.0\*\* \(Open VSX [\d,]+ \+ VS Code Marketplace [\d,]+\)/g,
+        replace: `**누적 ${total} 다운로드 · 평점 ${sp.averageRating}/5.0** (${breakdown})`,
       },
     ],
     "projects/claude-distill.md": [
@@ -210,9 +267,8 @@ function buildReplacements(
     ],
     "posts/claude-skills-panel-build-story.md": [
       {
-        pattern:
-          /\*\*Open VSX 누적 [\d,]+ 다운로드\*\* \(글 작성 시점[^)]*\)/g,
-        replace: `**Open VSX 누적 ${downloads} 다운로드** (글 작성 시점, VS Code Marketplace 합산 ${rounded})`,
+        pattern: /\*\*확장 누적 [\d,]+ 다운로드\*\* \([^)]*\)/g,
+        replace: `**확장 누적 ${total} 다운로드** (글 작성 시점 · ${breakdown})`,
       },
     ],
     "posts/claude-distill-build-story.md": [
@@ -234,16 +290,30 @@ function buildReplacements(
 
 async function main() {
   console.log("📡 통계 수집 중...\n");
-  const [sp, di, bp] = await Promise.all([
+  const [sp, mp, di, bp] = await Promise.all([
     fetchSkillsPanel(),
+    fetchVsCodeMarketplace(),
     fetchDistill(),
     fetchBumpist(),
   ]);
+
+  const extensionDownloads = sp.downloadCount + mp.downloadCount;
 
   console.log("=== Claude Code Skills Panel (Open VSX) ===");
   console.log(`  downloads: ${fmt(sp.downloadCount)}`);
   console.log(`  rating: ${sp.averageRating}/5.0 (${sp.reviewCount} review)`);
   console.log(`  version: ${sp.version}\n`);
+
+  console.log("=== Claude Code Skills Panel (VS Code Marketplace) ===");
+  console.log(
+    `  downloads: ${fmt(mp.downloadCount)} (install ${fmt(mp.installs)} + update ${fmt(mp.updateCount)})`,
+  );
+  console.log(`  version: ${mp.version}\n`);
+
+  console.log("=== 확장 합산 ===");
+  console.log(
+    `  Open VSX ${fmt(sp.downloadCount)} + Marketplace ${fmt(mp.downloadCount)} = ${fmt(extensionDownloads)}\n`,
+  );
 
   console.log("=== claude-distill (npm) ===");
   console.log(`  version: ${di.version}`);
@@ -274,7 +344,11 @@ async function main() {
 // 수동으로 손대지 마세요 — 다음 갱신 사이클에 덮어쓰입니다.
 
 export const LIVE_STATS = {
+  // 확장 누적 다운로드 = Open VSX + VS Code Marketplace 합산
+  extensionDownloads: ${extensionDownloads},
   openVsxDownloads: ${sp.downloadCount},
+  // VS Code Marketplace 는 install ${mp.installs} + update ${mp.updateCount} 합산
+  vscodeMarketplaceDownloads: ${mp.downloadCount},
   // npm 주간 다운로드 합산 (maintainer:bumpist 전체 패키지) — ${npmBreakdown}
   npmWeeklyDownloads: ${npm.total},
   lastUpdated: "${new Date().toISOString()}",
@@ -290,7 +364,7 @@ export const LIVE_STATS = {
     }
   }
 
-  const replacements = buildReplacements(sp, di, bp);
+  const replacements = buildReplacements(sp, mp, di, bp);
   const root = process.cwd();
   const changed: string[] = [];
 
@@ -324,7 +398,7 @@ export const LIVE_STATS = {
       );
       console.log("\n   git add src/shared/config/stats.ts");
       console.log(
-        `   git commit -m "chore(stats): live stats (Open VSX ${fmt(sp.downloadCount)}, npm weekly ${di.weeklyDownloads})"`,
+        `   git commit -m "chore(stats): live stats (extension ${fmt(extensionDownloads)}, npm weekly ${di.weeklyDownloads})"`,
       );
       console.log("   git push origin main");
     } else {
@@ -362,7 +436,7 @@ export const LIVE_STATS = {
   console.log("\n🎉 완료 — 변경된 파일을 commit 하면 라이브에도 반영됩니다.");
   console.log("\n   git add " + gitAddPaths.join(" "));
   console.log(
-    `   git commit -m "chore(stats): 통계 자동 갱신 (Open VSX ${fmt(sp.downloadCount)}, npm v${di.version} weekly ${di.weeklyDownloads})"`,
+    `   git commit -m "chore(stats): 통계 자동 갱신 (extension ${fmt(extensionDownloads)}, npm v${di.version} weekly ${di.weeklyDownloads})"`,
   );
   console.log("   git push origin main");
 }
