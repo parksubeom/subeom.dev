@@ -12,9 +12,9 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 
 const STATS: { label: string; value: string; caption: string }[] = [
   {
-    label: "Open VSX",
-    value: fmt(LIVE_STATS.openVsxDownloads),
-    caption: "Claude Code Skills Panel · downloads",
+    label: "Extension",
+    value: fmt(LIVE_STATS.extensionDownloads),
+    caption: "Claude Code Skills Panel · Open VSX + VS Code Marketplace 합산",
   },
   {
     label: "npm weekly",
