@@ -24,7 +24,7 @@ detailInfo:
     새 프론트엔드 프로젝트를 시작할 때마다 반복되는 세팅 — 폴더 구조 컨벤션, 린트·포맷 규칙, 디자인 토큰, 접근성 기준, 그리고 최근에는 Claude Code 스킬 세트까지 — 을 매번 손으로 옮겨 붙이는 대신, **명령 한 줄로 프로젝트에 주입**하는 CLI 입니다.
 
     `npx bumpist-code@latest init` 한 번이면 Vue / React / Next.js 프로젝트에 **FSD(Feature-Sliced Design) 아키텍처**, 공통 디자인 베이스라인, **WCAG AA** 기준, 그리고 **Claude Code 스킬 14종**이 일괄 설정됩니다. "팀마다 다르게 굳어지는 표준"을 "설치 한 번으로 합쳐지는 표준"으로 바꾸는 것이 목표입니다.
-  period: "2026-06 ~ 진행 중 (npm v0.5.1 · 주간 22 다운로드 · 223KB)"
+  period: "2026-06 ~ 진행 중 (npm v0.5.1 · 주간 15 다운로드 · 223KB)"
   team: "1인 개발"
   role: "전체 기획 · 설계 · CLI 구현 · 스킬 허브 큐레이션 · npm 배포 · 문서화"
   techStack:
@@ -73,7 +73,7 @@ detailInfo:
         - **npx 일회 실행 우선**: 전역 설치 없이 `npx ...@latest init` 한 줄로 최신 표준을 주입 — 진입 비용을 최소화.
     - title: "성과"
       content: |
-        - **npm 정식 배포** — 최신 npm v0.5.1, 주간 22 다운로드
+        - **npm 정식 배포** — 최신 npm v0.5.1, 주간 15 다운로드
         - **언팩 크기 223KB** — Vue·React·Next.js 3개 프레임워크 대응 표준 번들
         - **Claude Code 스킬 14종** 을 프로젝트에 함께 배치해 컨벤션을 실행 가능한 도구로 제공
   links:
