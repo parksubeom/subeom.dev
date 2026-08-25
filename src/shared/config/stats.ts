@@ -4,11 +4,11 @@
 
 export const LIVE_STATS = {
   // 확장 누적 다운로드 = Open VSX + VS Code Marketplace 합산
-  extensionDownloads: 10377,
-  openVsxDownloads: 8880,
-  // VS Code Marketplace 는 install 752 + update 745 합산
-  vscodeMarketplaceDownloads: 1497,
-  // npm 주간 다운로드 합산 (maintainer:bumpist 전체 패키지) — bumpist-code(14) + claude-distill(10)
-  npmWeeklyDownloads: 24,
-  lastUpdated: "2026-08-24T00:41:38.185Z",
+  extensionDownloads: 10391,
+  openVsxDownloads: 8892,
+  // VS Code Marketplace 는 install 754 + update 745 합산
+  vscodeMarketplaceDownloads: 1499,
+  // npm 주간 다운로드 합산 (maintainer:bumpist 전체 패키지) — claude-distill(11) + bumpist-code(6)
+  npmWeeklyDownloads: 17,
+  lastUpdated: "2026-08-25T00:40:50.250Z",
 } as const;
