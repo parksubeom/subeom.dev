@@ -132,7 +132,7 @@ assistant 라인을 만나면 `parentUuid` 부터 부모 체인을 최대 100홉
 
 GitHub Actions 로 `vX.Y.Z` 태그를 푸시하면 `vsce package` → Marketplace · OpenVSX 병렬 배포 + GitHub Release `.vsix` 자동 첨부까지 완전 자동화. 수동 작업 0.
 
-## 사용자 반응
+## 임팩트 — 사용자 반응
 
 배포 직후의 작은 사이드 프로젝트치고는 분에 넘치는 반응을 받았다.
 
