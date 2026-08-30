@@ -8,28 +8,35 @@ const STEPS = [
     tool: "CLAUDE.md · knowledge.md · gotchas.md",
     title: "Context Engineering",
     subTitle: "AI 가 빈 손으로 시작하지 않게",
-    desc: "프로젝트마다 결정 이유(판례)·함정 기록·도메인 규약을 분리한 markdown 으로 미리 설계합니다. 한 파일에 다 때려박지 않고 layer 를 나눠야 다음 세션에서 관련 컨텍스트만 정확히 복구돼요.",
+    desc: "프로젝트마다 결정 이유(판례)·함정 기록·도메인 규약을 분리한 markdown 으로 미리 설계합니다. 한 파일에 다 때려박지 않고 layer 를 나눠야, 다음 세션에서 관련 컨텍스트만 정확히 복구돼요.",
   },
   {
     step: "02",
-    tool: "Claude Code Skills Panel",
-    title: "Skill-based Execution",
-    subTitle: "반복 작업을 한 클릭으로",
-    desc: "자주 쓰는 작업 패턴(코드리뷰·테스트 작성·디자인 토큰 매칭 등)을 슬래시 커맨드/Skills 로 등록해서 매 세션 같은 설명을 반복하지 않습니다. 30개를 넘는 커맨드를 카드 그리드로 시각화하는 게 본업이 된 이유.",
+    tool: "Phase Split · Skills",
+    title: "Phased Prompting",
+    subTitle: "기획 → 인터페이스 → 구현",
+    desc: "한 번에 다 시키지 않고 phase 별로 쪼개 지시합니다. 앞 단계 산출물이 다음 프롬프트의 완벽한 컨텍스트가 되도록 설계해 구현 오류를 사전에 차단하고, 반복되는 패턴은 Skills 로 등록해 매번 같은 설명을 하지 않아요.",
   },
   {
     step: "03",
-    tool: "Phase Split",
-    title: "Phased Prompting",
-    subTitle: "기획 → 인터페이스 → 구현",
-    desc: "한 번에 다 시키지 않고 phase 별로 쪼개 지시합니다. 앞 단계 산출물이 다음 프롬프트의 완벽한 컨텍스트가 되도록 설계해 구현 오류를 사전 차단해요.",
+    tool: "런타임 계측 · toDataURL",
+    title: "Measure, Don't Infer",
+    subTitle: "증상을 묻지 말고 숫자로 답하게",
+    desc: "AI 에게 '왜 느리냐'고 되묻는 대신, 의심 구간에 계측을 직접 심어 숫자로 답하게 합니다. 슬라이드 전환 지연을 파던 날엔 그럴듯한 가설 4개를 계측 한 번으로 전부 죽였고, WebGL 이 비면 버퍼를 이미지로 떠서 '안 그려진 것'과 '안 보이는 것'을 갈랐어요. 추론은 빠르지만 틀리고, 측정은 결론을 냅니다.",
   },
   {
     step: "04",
+    tool: "Vitest · Mutation A/B",
+    title: "Adversarial Verification",
+    subTitle: "AI 가 쓴 테스트를 되묻는다",
+    desc: "테스트가 초록불이라고 안심하지 않습니다. 일부러 버그를 심어(변이) 그 테스트가 진짜 잡는지 확인해요. 정적 스펙을 통과해버리는 변이를 직접 만들어 '한 층만 있었으면 그대로 새어 나갔을 회귀'를 눈으로 본 뒤로는, 수정 하나에 정적·런타임 2층 스펙을 같은 PR 에 함께 답니다.",
+  },
+  {
+    step: "05",
     tool: "claude-distill · Stop hook",
     title: "Auto Handoff",
     subTitle: "세션 휘발성 무력화",
-    desc: "세션 종료 시 4단 게이트(휴리스틱 → Haiku → dedup → 재귀 가드)로 결정·페일·환경 quirk 를 자동 추출해 markdown 에 누적. 다음 세션은 어제 노하우를 시스템 프롬프트로 들고 시작합니다. LLM 비용 약 90% 절감.",
+    desc: "세션 종료 시 4단 게이트(휴리스틱 → Haiku → dedup → 재귀 가드)로 결정·페일·환경 quirk 를 자동 추출해 markdown 에 누적합니다. 다음 세션은 어제 노하우를 시스템 프롬프트로 들고 시작해요. LLM 비용 약 90% 절감.",
   },
 ];
 
@@ -76,13 +83,17 @@ export function AiWorkflow() {
         </h2>
         <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-3xl break-keep">
           <span className="text-foreground/90 font-medium">Claude Max</span>{" "}
-          를 메인으로,{" "}
-          <span className="text-foreground/90 font-medium">claude-distill</span>{" "}
-          로 세션 간 컨텍스트를 관리하고,{" "}
-          <span className="text-foreground/90 font-medium">Skills</span> 로
-          반복 작업을 한 클릭으로 줄입니다. 자유도가 아니라{" "}
+          를 메인으로 쓰지만, 핵심은 도구가 아니라{" "}
+          <span className="text-foreground/90 font-medium">
+            AI 의 결과가 스스로 증명하게 만드는 방식
+          </span>
+          이에요. 컨텍스트를 layer 로 설계해 세션 간에 잇고(claude-distill),
+          반복은 Skills 로 줄이고, 지시는 phase 로 쪼갭니다. 그리고 나온 결과는
+          계측과 변이 테스트로 되묻습니다. 자유도가 아니라{" "}
           <span className="text-foreground font-semibold">&apos;제약&apos;</span>
-          을 설계하는 파이프라인이에요.
+          을, 신뢰가 아니라{" "}
+          <span className="text-foreground font-semibold">&apos;검증&apos;</span>
+          을 설계하는 파이프라인입니다.
         </p>
       </div>
 

@@ -1,4 +1,4 @@
-import { Github, Mail, AtSign } from "lucide-react"
+import { Github, Mail } from "lucide-react"
 import { PROFILE } from "@/shared/config/profile"
 import { SITE_NAME } from "@/shared/config/site"
 
@@ -22,16 +22,6 @@ export function Footer() {
             >
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub 프로필로 이동</span>
-            </a>
-            <a
-              href={PROFILE.links.threads}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md p-2"
-              aria-label="Threads 프로필로 이동"
-            >
-              <AtSign className="h-5 w-5" />
-              <span className="sr-only">Threads 프로필로 이동</span>
             </a>
             <a
               href={PROFILE.links.email}

@@ -39,6 +39,7 @@ const LENSES = [
 
 // 자기 주장 — 사고 방식
 const BELIEFS = [
+  "혼자 잘 쓰는 것보다, 팀이 같이 쓰게 만드는 게 오래 갑니다.",
   "기능보다 메트릭의 정의가 먼저예요.",
   "허허벌판과 미로 — 같은 도구도 환경에 따라 정반대로 씁니다.",
   "SEO 와 접근성은 결국 같은 구조를 봅니다.",
@@ -141,7 +142,7 @@ export function AboutPage() {
               <span className="text-foreground font-semibold">박수범</span>
             </p>
             <p className="text-sm text-muted-foreground">
-              Seoul · Available for work · 매주 스레드에 인사이트 발행
+              Seoul · Available for work · 팀의 개발 문화를 함께 만듭니다
             </p>
           </div>
         </motion.div>
@@ -153,13 +154,14 @@ export function AboutPage() {
           transition={{ delay: 0.1 }}
           className="pl-6 border-l-4 border-primary/40 text-base md:text-lg text-foreground/90 leading-[1.85] py-2 break-keep"
         >
-          제가 답답해하던 문제가 곧 다음 도구의 개발 동기가 됩니다.
-          <br className="hidden sm:inline" /> 슬래시 커맨드 30개를 외우다
-          Claude Code Skills Panel 을, Claude 가 어제 배운 걸 까먹어서
-          claude-distill 을, 매번 반복되는 프로젝트 표준 세팅이 지겨워
-          bumpist-code 를 만들었어요.
-          <br className="hidden sm:inline" /> 제가 만든 npm 패키지가 모르는
-          사람들에게 닿는 사이클을 좋아합니다.
+          혼자 잘 쓰던 방식을 팀이 같이 쓰도록 만드는 걸 좋아합니다.
+          <br className="hidden sm:inline" /> 프로젝트마다 흩어지던 규약·스킬을
+          공용 레포로 묶어 팀에 전파하고, 문서 표준화를 회의 안건으로 올려 팀
+          합의로 정착시켰어요. 반복되는 판단은 AI 로 굳혀 다시 헤매지 않게 합니다.
+          <br className="hidden sm:inline" /> 그 과정에서 제가 답답해하던 문제가
+          곧 다음 도구의 개발 동기가 됩니다 — Skills Panel · claude-distill ·
+          bumpist-code 모두 그렇게 나왔고, 모르는 사람들에게 닿는 사이클을
+          좋아합니다.
         </motion.blockquote>
       </section>
 

@@ -1,10 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, ExternalLink, Pin } from "lucide-react";
+import { ArrowRight, Pin } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import Link from "next/link";
-import { PROFILE } from "@/shared/config/profile";
 import { LIVE_STATS } from "@/shared/config/stats";
 import { NOW_BUILDING } from "@/shared/config/now-building";
 
@@ -61,15 +60,15 @@ export function HeroSection() {
           >
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.2]">
               <span className="block">
-                집에선 <span className="text-primary">출력</span>을,
+                팀에 잘 <span className="text-primary">녹아들고</span>,
               </span>
               <span className="block">
-                회사에선 <span className="text-primary">정확도</span>를
-                연마합니다.
+                일하는 <span className="text-primary">방식</span>을 함께
+                바꿉니다.
               </span>
             </h1>
             <p className="text-base md:text-lg text-muted-foreground/90 font-medium">
-              혼자선 빠르게, 함께선 신중하게.
+              잘 스며드는 데서 그치지 않고, 팀이 일하는 방식을 함께 바꿔 갑니다.
             </p>
             <p className="text-xs md:text-sm text-muted-foreground/70 tracking-wide">
               ─ 프론트엔드 개발자 박수범
@@ -83,9 +82,10 @@ export function HeroSection() {
             className="space-y-4 text-left md:text-center max-w-2xl"
           >
             <p className="text-base md:text-lg text-foreground/85 leading-[1.8] break-keep">
-              사이드프로젝트로 만든{" "}
-              <span className="text-foreground font-medium">AI 도구</span>가
-              실사용자에게 닿고, 그 경험을 다시 팀 워크플로우에 가져옵니다.
+              혼자 잘 쓰던 방식을{" "}
+              <span className="text-foreground font-medium">팀이 같이 쓰도록</span>{" "}
+              만듭니다. 규약·스킬을 공용 레포로 묶고, 반복되는 판단은 AI 로 굳혀
+              팀이 다시 헤매지 않게 해요.
             </p>
             <p className="text-base md:text-lg text-foreground/85 leading-[1.8] break-keep">
               웹접근성 컨설턴트로 시작해서,{" "}
@@ -181,14 +181,9 @@ export function HeroSection() {
               className="gap-2 h-11 px-6 text-base rounded-full text-muted-foreground hover:text-foreground"
               asChild
             >
-              <a
-                href={PROFILE.links.threads}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                @water_bum_2 on Threads
-                <ExternalLink className="w-4 h-4" />
-              </a>
+              <Link href="/about">
+                About Me <ArrowRight className="w-4 h-4" />
+              </Link>
             </Button>
           </motion.div>
         </div>

@@ -33,7 +33,6 @@ export default async function Home() {
     image: `${SITE_URL}/opengraph-image`,
     sameAs: [
       PROFILE.links.github,
-      PROFILE.links.threads,
     ],
     knowsAbout: [
       "Frontend Development",
@@ -62,7 +61,7 @@ export default async function Home() {
         {/* Hero — thesis + 컨설턴트 한 줄 + live stats */}
         <HeroSection />
 
-        {/* From the Threads — 요즘 고민·생각 한 편 */}
+        {/* Now Thinking — 요즘 고민·생각 한 편 */}
         <ThreadsQuotes />
 
         {/* AI Workflow — 지휘하는 개발자 방법론 */}
