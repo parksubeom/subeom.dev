@@ -27,7 +27,7 @@ export default async function Home() {
     alternateName: ["Subeom Park", SITE_NAME, "subeomdev"],
     jobTitle: PROFILE.role,
     description:
-      "집에선 출력을, 회사에선 정확도를 연마하는 프론트엔드 개발자. claude-distill · Claude Code Skills Panel 메인테이너.",
+      "팀에 잘 녹아들고 일하는 방식을 함께 바꾸는 프론트엔드 개발자. 규약·스킬을 공용 레포로 팀에 전파하고, claude-distill · Claude Code Skills Panel 을 만든 메인테이너.",
     email: PROFILE.email,
     url: SITE_URL,
     image: `${SITE_URL}/opengraph-image`,

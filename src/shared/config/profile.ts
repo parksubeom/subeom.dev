@@ -1,7 +1,7 @@
 export const PROFILE = {
   name: "박수범",
   role: "Frontend Developer",
-  bio: "집에선 출력을, 회사에선 정확도를 연마합니다. 본인 페인 포인트에서 시작해 npm 과 Open VSX 에 진짜 출시하는 사이클을 좋아해요.",
+  bio: "팀에 잘 녹아들고, 일하는 방식을 함께 바꿔 갑니다. 혼자 잘 쓰던 방식을 공용 레포·스킬로 팀에 전파하고, 반복되는 판단은 AI 로 굳혀 다시 헤매지 않게 해요.",
   email: "sooknise@naver.com",
   phone: "010-8109-0731",
   location: "Seoul, Republic of Korea",
