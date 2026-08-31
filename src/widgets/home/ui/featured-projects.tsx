@@ -23,10 +23,21 @@ interface FeaturedProjectsProps {
 export function FeaturedProjects({ projects }: FeaturedProjectsProps) {
   const [selectedProject, setSelectedProject] = useState<Project | Tables<'projects'> | null>(null); // ✨ 상태 관리 추가
 
-  // Featured된 프로젝트만 최대 4개 보여주기 - useMemo로 최적화
+  // Featured된 프로젝트만 최신순으로 최대 4개 보여주기 - useMemo로 최적화
   const displayedProjects = useMemo(() => {
     return projects
       .filter(p => p.featured)
+      .sort((a, b) => {
+        // updated_at 기준 최신순
+        if (a.updated_at && b.updated_at) {
+          return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+        }
+        // updated_at이 없으면 start_date 기준
+        if (a.start_date && b.start_date) {
+          return new Date(b.start_date).getTime() - new Date(a.start_date).getTime();
+        }
+        return 0;
+      })
       .slice(0, 4);
   }, [projects]);
 
