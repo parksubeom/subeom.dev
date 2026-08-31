@@ -114,19 +114,24 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
     if (hasSearchQuery) {
       // 검색어가 있을 때는 클라이언트 사이드 페이지네이션만 업데이트
       setSearchPage(page);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // 상태 업데이트 후 스크롤 (동기적으로 실행)
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 0);
       return;
     }
-    
+
     const params = new URLSearchParams(searchParams.toString());
     if (page === 1) {
       params.delete("page");
     } else {
       params.set("page", page.toString());
     }
-    router.push(`/blog?${params.toString()}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [hasSearchQuery, searchParams, router]);
+
+    startTransition(() => {
+      router.push(`/blog?${params.toString()}`);
+      // transition 내에서 콘텐츠 변경 후 스크롤 실행
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
+    });
+  }, [hasSearchQuery, searchParams, router, startTransition]);
 
   const handleTagClick = useCallback((tag: string) => {
     startTransition(() => {
@@ -139,8 +144,9 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
       }
       params.delete("page"); // tag 변경 시 첫 페이지로
       router.push(`/blog?${params.toString()}`);
+      // transition 내에서 콘텐츠 변경 후 스크롤 실행
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
     });
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [selectedTag, router]);
 
   const handleRemoveTag = useCallback(() => {
@@ -149,8 +155,9 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
       params.delete("tag");
       params.delete("page"); // tag 변경 시 첫 페이지로
       router.push(`/blog?${params.toString()}`);
+      // transition 내에서 콘텐츠 변경 후 스크롤 실행
+      setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50);
     });
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [searchParams, router]);
 
   // 헤더와 검색창을 useMemo로 메모이제이션하여 불필요한 리렌더링 방지
@@ -254,10 +261,10 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
             onClick={() => {
               if (hasSearchQuery) {
                 setSearchPage(prev => Math.max(1, prev - 1));
+                setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 0);
               } else {
                 handlePageChange(effectiveCurrentPage - 1);
               }
-              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             disabled={effectiveCurrentPage === 1}
             className="gap-1"
@@ -282,10 +289,10 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
                     onClick={() => {
                       if (hasSearchQuery) {
                         setSearchPage(page);
+                        setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 0);
                       } else {
                         handlePageChange(page);
                       }
-                      window.scrollTo({ top: 0, behavior: "smooth" });
                     }}
                     className="min-w-[2.5rem]"
                   >
@@ -312,10 +319,10 @@ export function PostListSection({ initialPosts, currentPage, totalPages, selecte
             onClick={() => {
               if (hasSearchQuery) {
                 setSearchPage(prev => Math.min(effectiveTotalPages, prev + 1));
+                setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 0);
               } else {
                 handlePageChange(effectiveCurrentPage + 1);
               }
-              window.scrollTo({ top: 0, behavior: "smooth" });
             }}
             disabled={effectiveCurrentPage === effectiveTotalPages}
             className="gap-1"
